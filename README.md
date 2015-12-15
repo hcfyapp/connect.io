@@ -15,12 +15,13 @@ Client(somewhere.html)：
 ```html
 <script src="node_modules/connect.io-client/dist/client.js"></script>
 <script>
-const client = new ChromeClient('extensions id');
+const client = new ChromeClient('optional extensions or apps id, default value is chrome.runtime.id');
 client.on('welcome',(msg) => {
-console.log(msg); // 'hello world'
+  console.log(msg); // 'hello world'
 });
 
-client.emit('report clients number', 'some arguments', (number) => {
+// data can be omit
+client.emit('report clients number', (number) => {
   console.log(number); // 100
 });
 </script>
@@ -41,8 +42,8 @@ server.on('connect',(connection)=> {
   connection.broadcast('join','new client joined.');
 
   // Sending acknowledgements
-  connection.on('report clients number',(data, sendResponse) => {
-    console.log(data); // 'some arguments'
+  connection.on('report clients number', (data, sendResponse) => {
+    console.log(data); // when no data send to server, the data argument will be undefined
     sendResponse(100);
   });
 
