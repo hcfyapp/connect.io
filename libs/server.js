@@ -59,7 +59,7 @@ class Connection {
    * @param {Function} cb
    */
   on( eventName , cb ) {
-    this.eventEmitter.on( eventName , ( name , data , id )=> {
+    this.eventEmitter.on( eventName , ( data , id )=> {
       if ( id ) {
         let sent;
         cb( data , res => {

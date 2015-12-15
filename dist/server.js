@@ -156,7 +156,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function on(eventName, cb) {
 	      var _this3 = this;
 	
-	      this.eventEmitter.on(eventName, function (name, data, id) {
+	      this.eventEmitter.on(eventName, function (data, id) {
 	        if (id) {
 	          (function () {
 	            var sent = undefined;
