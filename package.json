@@ -1,6 +1,6 @@
 {
   "name": "connect.io",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "chrome.runtime.connect wrapper that using Stock.IO API.",
   "scripts": {
     "webpack": "webpack"
