@@ -1,11 +1,11 @@
 # connect.io
 
-[chrome.runtime.connect](https://developer.chrome.com/extensions/runtime#method-connect) wrapper that using [Stock.IO API](http://socket.io/docs/).
+[chrome.runtime.connect](https://developer.chrome.com/extensions/runtime#method-connect) wrapper that using [Socket.IO API](http://socket.io/docs/).
 
 ## Install
 
 ```
-npm i connect.io connect.io-client
+npm i -S connect.io connect.io-client
 ```
 
 ## Usage
