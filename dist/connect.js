@@ -5658,8 +5658,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    var ports = _this.ports = [];
 	
-	    runtime.onConnectExternal.addListener(onPortConnect.bind(_this));
 	    runtime.onConnect.addListener(onPortConnect.bind(_this));
+	
+	    var onConnectExternal = runtime.onConnectExternal;
+	
+	    if (onConnectExternal) {
+	      onConnectExternal.addListener(onPortConnect.bind(_this));
+	    }
 	
 	    function onPortConnect(chromePort) {
 	      var port = new _port2.default(chromePort);

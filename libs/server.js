@@ -18,8 +18,12 @@ export default class Server extends EventEmitter {
      */
     const ports = this.ports = [];
 
-    runtime.onConnectExternal.addListener( onPortConnect.bind( this ) );
     runtime.onConnect.addListener( onPortConnect.bind( this ) );
+
+    let {onConnectExternal} = runtime;
+    if ( onConnectExternal ) {
+      onConnectExternal.addListener( onPortConnect.bind( this ) );
+    }
 
     function onPortConnect( chromePort ) {
       const port = new Port( chromePort );
