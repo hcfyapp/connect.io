@@ -5,7 +5,7 @@
 ## Install
 
 ```
-npm i connect.io connect.io-client
+npm i -S connect.io connect.io-client
 ```
 
 ## Usage
