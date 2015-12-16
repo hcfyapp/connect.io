@@ -1,9 +1,9 @@
 module.exports = {
-  entry : './libs/server' ,
+  entry : './libs/index' ,
   output : {
     path : './dist' ,
-    filename : 'server.js' ,
-    library : 'ChromeServer' ,
+    filename : 'connect.js' ,
+    library : 'ChromeConnect' ,
     libraryTarget : 'umd'
   } ,
   module : {
@@ -14,7 +14,7 @@ module.exports = {
         loader : 'babel' ,
         query : {
           presets : [ 'es2015' ] ,
-          plugins : [ 'add-module-exports' , 'transform-runtime' ]
+          plugins : [ 'transform-runtime' ]
         }
       }
     ]
