@@ -2,6 +2,8 @@ import EventEmitter from 'events';
 
 const {runtime} = chrome;
 
+function noop() {}
+
 class Connection {
 
   /**
@@ -60,19 +62,20 @@ class Connection {
    */
   on( eventName , cb ) {
     this.eventEmitter.on( eventName , ( data , id )=> {
+      let sent , sendResponse;
       if ( id ) {
-        let sent;
-        cb( data , res => {
+        sendResponse = res => {
           if ( sent ) {
             console.warn( `Event "${eventName}" was already response.` );
             return;
           }
           sent = true;
           this.emit( `Response for "${eventName}"` , res , id );
-        } );
+        };
       } else {
-        cb( data );
+        sendResponse = noop;
       }
+      cb( data , sendResponse );
     } );
   }
 }

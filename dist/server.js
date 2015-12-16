@@ -77,6 +77,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _chrome = chrome;
 	var runtime = _chrome.runtime;
 	
+	function noop() {}
+	
 	var Connection = (function () {
 	
 	  /**
@@ -157,21 +159,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var _this3 = this;
 	
 	      this.eventEmitter.on(eventName, function (data, id) {
+	        var sent = undefined,
+	            sendResponse = undefined;
 	        if (id) {
-	          (function () {
-	            var sent = undefined;
-	            cb(data, function (res) {
-	              if (sent) {
-	                console.warn('Event "' + eventName + '" was already response.');
-	                return;
-	              }
-	              sent = true;
-	              _this3.emit('Response for "' + eventName + '"', res, id);
-	            });
-	          })();
+	          sendResponse = function (res) {
+	            if (sent) {
+	              console.warn('Event "' + eventName + '" was already response.');
+	              return;
+	            }
+	            sent = true;
+	            _this3.emit('Response for "' + eventName + '"', res, id);
+	          };
 	        } else {
-	          cb(data);
+	          sendResponse = noop;
 	        }
+	        cb(data, sendResponse);
 	      });
 	    }
 	  }]);
