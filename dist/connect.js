@@ -65,7 +65,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _client2 = _interopRequireDefault(_client);
 	
-	var _server = __webpack_require__(49);
+	var _server = __webpack_require__(77);
 	
 	var _server2 = _interopRequireDefault(_server);
 	
@@ -106,6 +106,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	var _chrome = chrome;
+	var runtime = _chrome.runtime;
+	
 	var Client = (function (_Port) {
 	  (0, _inherits3.default)(Client, _Port);
 	
@@ -116,7 +119,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  function Client(eId) {
 	    (0, _classCallCheck3.default)(this, Client);
-	    return (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Client).call(this, chrome.runtime.connect(eId)));
+	    return (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Client).call(this, runtime.connect(eId || runtime.id)));
 	  }
 	
 	  return Client;
@@ -951,7 +954,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 	
-	var _createClass2 = __webpack_require__(50);
+	var _createClass2 = __webpack_require__(49);
 	
 	var _createClass3 = _interopRequireDefault(_createClass2);
 	
@@ -963,11 +966,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _inherits3 = _interopRequireDefault(_inherits2);
 	
-	var _events = __webpack_require__(53);
+	var _events = __webpack_require__(52);
 	
 	var _events2 = _interopRequireDefault(_events);
 	
-	var _nodeUuid = __webpack_require__(54);
+	var _nodeUuid = __webpack_require__(53);
 	
 	var _nodeUuid2 = _interopRequireDefault(_nodeUuid);
 	
@@ -1093,123 +1096,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _getPrototypeOf = __webpack_require__(2);
-	
-	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
-	
-	var _classCallCheck2 = __webpack_require__(14);
-	
-	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-	
-	var _createClass2 = __webpack_require__(50);
-	
-	var _createClass3 = _interopRequireDefault(_createClass2);
-	
-	var _possibleConstructorReturn2 = __webpack_require__(15);
-	
-	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-	
-	var _inherits2 = __webpack_require__(41);
-	
-	var _inherits3 = _interopRequireDefault(_inherits2);
-	
-	var _events = __webpack_require__(53);
-	
-	var _events2 = _interopRequireDefault(_events);
-	
-	var _port = __webpack_require__(48);
-	
-	var _port2 = _interopRequireDefault(_port);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var _chrome = chrome;
-	var runtime = _chrome.runtime;
-	
-	var server = undefined;
-	
-	var Server = (function (_EventEmitter) {
-	  (0, _inherits3.default)(Server, _EventEmitter);
-	
-	  function Server() {
-	    (0, _classCallCheck3.default)(this, Server);
-	
-	    if (server) {
-	      var _ret;
-	
-	      return _ret = server, (0, _possibleConstructorReturn3.default)(_this, _ret);
-	    }
-	
-	    var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Server).call(this));
-	
-	    server = _this;
-	
-	    /**
-	     * 端口的集合
-	     * @type {Port[]}
-	     */
-	    var ports = _this.ports = [];
-	
-	    runtime.onConnectExternal.addListener(onPortConnect.bind(_this));
-	    runtime.onConnect.addListener(onPortConnect.bind(_this));
-	
-	    function onPortConnect(chromePort) {
-	      var port = new _port2.default(chromePort);
-	      port.on('disconnect', function () {
-	        ports.splice(ports.indexOf(port), 1);
-	      });
-	
-	      /**
-	       * 广播消息的方法。消息将会发送到服务器的所有客户端，除了发起这个广播的客户端本身。
-	       * @param {String} name
-	       * @param {*} [data]
-	       */
-	      port.broadcast = function (name, data) {
-	        ports.forEach(function (clientPort) {
-	          if (clientPort !== port) {
-	            clientPort.send(name, data);
-	          }
-	        });
-	      };
-	      ports.push(port);
-	      this.emit('connect', port);
-	    }
-	    return _this;
-	  }
-	
-	  /**
-	   * 发送消息到此服务器下的所有客户端
-	   * @param {String} name
-	   * @param {*} [data]
-	   */
-	
-	  (0, _createClass3.default)(Server, [{
-	    key: 'send',
-	    value: function send(name, data) {
-	      this.ports.forEach(function (clientPort) {
-	        clientPort.send(name, data);
-	      });
-	    }
-	  }]);
-	  return Server;
-	})(_events2.default);
-	
-	exports.default = Server;
-	;
-
-/***/ },
-/* 50 */
-/***/ function(module, exports, __webpack_require__) {
-
 	"use strict";
 	
-	var _defineProperty = __webpack_require__(51);
+	var _defineProperty = __webpack_require__(50);
 	
 	var _defineProperty2 = _interopRequireDefault(_defineProperty);
 	
@@ -1236,13 +1125,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.__esModule = true;
 
 /***/ },
-/* 51 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(52), __esModule: true };
+	module.exports = { "default": __webpack_require__(51), __esModule: true };
 
 /***/ },
-/* 52 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(20);
@@ -1251,7 +1140,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 53 */
+/* 52 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -1555,7 +1444,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 54 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(Buffer) {//     uuid.js
@@ -1616,7 +1505,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // Moderately fast, high quality
 	    if (true) {
 	      try {
-	        var _rb = __webpack_require__(59).randomBytes;
+	        var _rb = __webpack_require__(58).randomBytes;
 	        _nodeRNG = _rng = _rb && function() {return _rb(16);};
 	        _rng();
 	      } catch(e) {}
@@ -1831,10 +1720,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	})('undefined' !== typeof window ? window : null);
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(55).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(54).Buffer))
 
 /***/ },
-/* 55 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer, global) {/*!
@@ -1845,9 +1734,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	/* eslint-disable no-proto */
 	
-	var base64 = __webpack_require__(56)
-	var ieee754 = __webpack_require__(57)
-	var isArray = __webpack_require__(58)
+	var base64 = __webpack_require__(55)
+	var ieee754 = __webpack_require__(56)
+	var isArray = __webpack_require__(57)
 	
 	exports.Buffer = Buffer
 	exports.SlowBuffer = SlowBuffer
@@ -3382,10 +3271,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return i
 	}
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(55).Buffer, (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(54).Buffer, (function() { return this; }())))
 
 /***/ },
-/* 56 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
@@ -3515,7 +3404,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 57 */
+/* 56 */
 /***/ function(module, exports) {
 
 	exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -3605,7 +3494,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 58 */
+/* 57 */
 /***/ function(module, exports) {
 
 	var toString = {}.toString;
@@ -3616,10 +3505,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 59 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(Buffer) {var rng = __webpack_require__(60)
+	/* WEBPACK VAR INJECTION */(function(Buffer) {var rng = __webpack_require__(59)
 	
 	function error () {
 	  var m = [].slice.call(arguments).join(' ')
@@ -3630,9 +3519,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    ].join('\n'))
 	}
 	
-	exports.createHash = __webpack_require__(62)
+	exports.createHash = __webpack_require__(61)
 	
-	exports.createHmac = __webpack_require__(75)
+	exports.createHmac = __webpack_require__(74)
 	
 	exports.randomBytes = function(size, callback) {
 	  if (callback && callback.call) {
@@ -3653,7 +3542,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return ['sha1', 'sha256', 'sha512', 'md5', 'rmd160']
 	}
 	
-	var p = __webpack_require__(76)(exports)
+	var p = __webpack_require__(75)(exports)
 	exports.pbkdf2 = p.pbkdf2
 	exports.pbkdf2Sync = p.pbkdf2Sync
 	
@@ -3673,16 +3562,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	})
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(55).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(54).Buffer))
 
 /***/ },
-/* 60 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global, Buffer) {(function() {
 	  var g = ('undefined' === typeof window ? global : window) || {}
 	  _crypto = (
-	    g.crypto || g.msCrypto || __webpack_require__(61)
+	    g.crypto || g.msCrypto || __webpack_require__(60)
 	  )
 	  module.exports = function(size) {
 	    // Modern Browsers
@@ -3706,22 +3595,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	}())
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(55).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(54).Buffer))
 
 /***/ },
-/* 61 */
+/* 60 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
 
 /***/ },
-/* 62 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(Buffer) {var createHash = __webpack_require__(63)
+	/* WEBPACK VAR INJECTION */(function(Buffer) {var createHash = __webpack_require__(62)
 	
-	var md5 = toConstructor(__webpack_require__(72))
-	var rmd160 = toConstructor(__webpack_require__(74))
+	var md5 = toConstructor(__webpack_require__(71))
+	var rmd160 = toConstructor(__webpack_require__(73))
 	
 	function toConstructor (fn) {
 	  return function () {
@@ -3749,10 +3638,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return createHash(alg)
 	}
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(55).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(54).Buffer))
 
 /***/ },
-/* 63 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var exports = module.exports = function (alg) {
@@ -3761,16 +3650,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return new Alg()
 	}
 	
-	var Buffer = __webpack_require__(55).Buffer
-	var Hash   = __webpack_require__(64)(Buffer)
+	var Buffer = __webpack_require__(54).Buffer
+	var Hash   = __webpack_require__(63)(Buffer)
 	
-	exports.sha1 = __webpack_require__(65)(Buffer, Hash)
-	exports.sha256 = __webpack_require__(70)(Buffer, Hash)
-	exports.sha512 = __webpack_require__(71)(Buffer, Hash)
+	exports.sha1 = __webpack_require__(64)(Buffer, Hash)
+	exports.sha256 = __webpack_require__(69)(Buffer, Hash)
+	exports.sha512 = __webpack_require__(70)(Buffer, Hash)
 
 
 /***/ },
-/* 64 */
+/* 63 */
 /***/ function(module, exports) {
 
 	module.exports = function (Buffer) {
@@ -3853,7 +3742,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 65 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -3865,7 +3754,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * See http://pajhome.org.uk/crypt/md5 for details.
 	 */
 	
-	var inherits = __webpack_require__(66).inherits
+	var inherits = __webpack_require__(65).inherits
 	
 	module.exports = function (Buffer, Hash) {
 	
@@ -3997,7 +3886,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 66 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global, process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -4525,7 +4414,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	exports.isPrimitive = isPrimitive;
 	
-	exports.isBuffer = __webpack_require__(68);
+	exports.isBuffer = __webpack_require__(67);
 	
 	function objectToString(o) {
 	  return Object.prototype.toString.call(o);
@@ -4569,7 +4458,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *     prototype.
 	 * @param {function} superCtor Constructor function to inherit prototype from.
 	 */
-	exports.inherits = __webpack_require__(69);
+	exports.inherits = __webpack_require__(68);
 	
 	exports._extend = function(origin, add) {
 	  // Don't do anything if add isn't an object
@@ -4587,10 +4476,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return Object.prototype.hasOwnProperty.call(obj, prop);
 	}
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(67)))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(66)))
 
 /***/ },
-/* 67 */
+/* 66 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -4687,7 +4576,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 68 */
+/* 67 */
 /***/ function(module, exports) {
 
 	module.exports = function isBuffer(arg) {
@@ -4698,7 +4587,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 69 */
+/* 68 */
 /***/ function(module, exports) {
 
 	if (typeof Object.create === 'function') {
@@ -4727,7 +4616,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 70 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -4739,7 +4628,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 */
 	
-	var inherits = __webpack_require__(66).inherits
+	var inherits = __webpack_require__(65).inherits
 	
 	module.exports = function (Buffer, Hash) {
 	
@@ -4880,10 +4769,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 71 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var inherits = __webpack_require__(66).inherits
+	var inherits = __webpack_require__(65).inherits
 	
 	module.exports = function (Buffer, Hash) {
 	  var K = [
@@ -5130,7 +5019,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 72 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -5142,7 +5031,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * See http://pajhome.org.uk/crypt/md5 for more info.
 	 */
 	
-	var helpers = __webpack_require__(73);
+	var helpers = __webpack_require__(72);
 	
 	/*
 	 * Calculate the MD5 of an array of little-endian words, and a bit length
@@ -5291,7 +5180,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 73 */
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {var intSize = 4;
@@ -5329,10 +5218,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = { hash: hash };
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(55).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(54).Buffer))
 
 /***/ },
-/* 74 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {
@@ -5541,13 +5430,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(55).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(54).Buffer))
 
 /***/ },
-/* 75 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(Buffer) {var createHash = __webpack_require__(62)
+	/* WEBPACK VAR INJECTION */(function(Buffer) {var createHash = __webpack_require__(61)
 	
 	var zeroBuffer = new Buffer(128)
 	zeroBuffer.fill(0)
@@ -5591,13 +5480,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(55).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(54).Buffer))
 
 /***/ },
-/* 76 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var pbkdf2Export = __webpack_require__(77)
+	var pbkdf2Export = __webpack_require__(76)
 	
 	module.exports = function (crypto, exports) {
 	  exports = exports || {}
@@ -5612,7 +5501,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 77 */
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {module.exports = function(crypto) {
@@ -5700,7 +5589,121 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	}
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(55).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(54).Buffer))
+
+/***/ },
+/* 77 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _getPrototypeOf = __webpack_require__(2);
+	
+	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+	
+	var _classCallCheck2 = __webpack_require__(14);
+	
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+	
+	var _createClass2 = __webpack_require__(49);
+	
+	var _createClass3 = _interopRequireDefault(_createClass2);
+	
+	var _possibleConstructorReturn2 = __webpack_require__(15);
+	
+	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+	
+	var _inherits2 = __webpack_require__(41);
+	
+	var _inherits3 = _interopRequireDefault(_inherits2);
+	
+	var _events = __webpack_require__(52);
+	
+	var _events2 = _interopRequireDefault(_events);
+	
+	var _port = __webpack_require__(48);
+	
+	var _port2 = _interopRequireDefault(_port);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var _chrome = chrome;
+	var runtime = _chrome.runtime;
+	
+	var server = undefined;
+	
+	var Server = (function (_EventEmitter) {
+	  (0, _inherits3.default)(Server, _EventEmitter);
+	
+	  function Server() {
+	    (0, _classCallCheck3.default)(this, Server);
+	
+	    if (server) {
+	      var _ret;
+	
+	      return _ret = server, (0, _possibleConstructorReturn3.default)(_this, _ret);
+	    }
+	
+	    var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Server).call(this));
+	
+	    server = _this;
+	
+	    /**
+	     * 端口的集合
+	     * @type {Port[]}
+	     */
+	    var ports = _this.ports = [];
+	
+	    runtime.onConnectExternal.addListener(onPortConnect.bind(_this));
+	    runtime.onConnect.addListener(onPortConnect.bind(_this));
+	
+	    function onPortConnect(chromePort) {
+	      var port = new _port2.default(chromePort);
+	      port.on('disconnect', function () {
+	        ports.splice(ports.indexOf(port), 1);
+	      });
+	
+	      /**
+	       * 广播消息的方法。消息将会发送到服务器的所有客户端，除了发起这个广播的客户端本身。
+	       * @param {String} name
+	       * @param {*} [data]
+	       */
+	      port.broadcast = function (name, data) {
+	        ports.forEach(function (clientPort) {
+	          if (clientPort !== port) {
+	            clientPort.send(name, data);
+	          }
+	        });
+	      };
+	      ports.push(port);
+	      this.emit('connect', port);
+	    }
+	    return _this;
+	  }
+	
+	  /**
+	   * 发送消息到此服务器下的所有客户端
+	   * @param {String} name
+	   * @param {*} [data]
+	   */
+	
+	  (0, _createClass3.default)(Server, [{
+	    key: 'send',
+	    value: function send(name, data) {
+	      this.ports.forEach(function (clientPort) {
+	        clientPort.send(name, data);
+	      });
+	    }
+	  }]);
+	  return Server;
+	})(_events2.default);
+	
+	exports.default = Server;
+	;
 
 /***/ }
 /******/ ])

@@ -1,5 +1,7 @@
 import Port from './port';
 
+const {runtime} = chrome;
+
 export default class Client extends Port {
 
   /**
@@ -7,6 +9,6 @@ export default class Client extends Port {
    * @param {String} [eId]
    */
   constructor( eId ) {
-    super( chrome.runtime.connect( eId ) );
+    super( runtime.connect( eId || runtime.id ) );
   }
 };
