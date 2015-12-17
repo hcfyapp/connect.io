@@ -29,6 +29,11 @@ export default class Server extends EventEmitter {
       } );
     }
 
+    /**
+     * 初始化服务端的端口
+     * @param {chrome.runtime.Port} chromePort
+     * @param {Boolean} isExternal - 此连接是否为外部连接
+     */
     function initServerPort( chromePort , isExternal ) {
       const port = new Port( chromePort );
       port.exteranl = isExternal;
