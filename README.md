@@ -21,7 +21,14 @@ client.on('welcome',(msg) => {
 });
 
 // get message acknowledgements
-client.send('report clients number', (number) => {
+client.send('report clients number', (number, error) => {
+
+  // When connection has been disconnected until get response, then error will be a string.
+  // It's often happened when you connect to a tab from extension but you don't have permission. (etc chrome:// 、chrome-extension://)
+  if( error ) {
+    throw new Error(error);
+  }
+
   console.log(number); // 100
 });
 </script>

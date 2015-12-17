@@ -58,9 +58,23 @@ export default class Port extends EventEmitter {
         this.emit( name , data , sendResponse );
       }
     } );
+
+    // 这个回调说明连接是被远程端口断开的
     port.onDisconnect.addListener( ()=> {
-      this.emit( 'disconnect' );
+      this.emit( 'disconnect' , true ); // true 表明连接是被远程端口断开的
     } );
+
+    this.on( 'disconnect' ,
+      /**
+       * 当连接断开时，告诉所有等待响应的消息一个错误
+       * @param {Boolean} isRemote - 连接是否是被远程端口断开的
+       */
+      isRemote => {
+        for ( let key in waitingResponseMsg ) {
+          waitingResponseMsg[ key ]( undefined , `Connection has been disconnected by ${isRemote ? 'Server' : 'Client'}.` );
+          delete waitingResponseMsg[ key ];
+        }
+      } );
   }
 
   /**
@@ -94,6 +108,7 @@ export default class Port extends EventEmitter {
    */
   disconnect() {
     this.port.disconnect();
+    this.emit( 'disconnect' , false );
   }
 }
 

@@ -5221,8 +5221,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	        })();
 	      }
 	    });
+	
+	    // 这个回调说明连接是被远程端口断开的
 	    port.onDisconnect.addListener(function () {
-	      _this.emit('disconnect');
+	      _this.emit('disconnect', true); // true 表明连接是被远程端口断开的
+	    });
+	
+	    _this.on('disconnect',
+	    /**
+	     * 当连接断开时，告诉所有等待响应的消息一个错误
+	     * @param {Boolean} isRemote - 连接是否是被远程端口断开的
+	     */
+	    function (isRemote) {
+	      for (var key in waitingResponseMsg) {
+	        waitingResponseMsg[key](undefined, 'Connection has been disconnected by ' + (isRemote ? 'Server' : 'Client') + '.');
+	        delete waitingResponseMsg[key];
+	      }
 	    });
 	    return _this;
 	  }
@@ -5264,6 +5278,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'disconnect',
 	    value: function disconnect() {
 	      this.port.disconnect();
+	      this.emit('disconnect', false);
 	    }
 	  }]);
 	  return Port;
@@ -5716,6 +5731,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      });
 	    }
 	
+	    /**
+	     * 初始化服务端的端口
+	     * @param {chrome.runtime.Port} chromePort
+	     * @param {Boolean} isExternal - 此连接是否为外部连接
+	     */
 	    function initServerPort(chromePort, isExternal) {
 	      var port = new _port2.default(chromePort);
 	      port.exteranl = isExternal;
