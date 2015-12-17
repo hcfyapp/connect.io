@@ -1055,8 +1055,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this.port = port;
 	
 	    port.onMessage.addListener(function (msg) {
-	      var name = msg.name;
-	      var data = msg.data;
 	      var id = msg.id;
 	
 	      // 如果在字典里找到了对应 id 的回调函数，那么说明这个消息是由本地端口发送的并有回调函数
@@ -1065,7 +1063,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var cb = waitingResponseMsg[id];
 	      if (cb) {
 	        delete waitingResponseMsg[id];
-	        cb(data);
+	        cb(msg.error, msg.response);
 	      } else {
 	        (function () {
 	          var sent = undefined,
@@ -1074,22 +1072,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	            /**
 	             * 发送处理结果至远程端口。这个函数只能被调用一次。
+	             * @param {*} [error] - 错误
 	             * @param {*} [response]
 	             */
-	            sendResponse = function (response) {
+	            sendResponse = function (error, response) {
 	              if (sent) {
-	                console.warn('Event "' + eventName + '" was already response.');
+	                console.warn('Message "' + msg.name + '" was already response.');
 	                return;
 	              }
 	              sent = true;
-	              // 发送回执时，此消息是没有 name 的
-	              port.postMessage({ id: id, data: response });
+	              // 发送回执
+	              port.postMessage({ id: id, response: response, error: error });
 	            };
 	          } else {
 	            sendResponse = noop;
 	          }
 	
-	          _this.emit(name, data, sendResponse);
+	          _this.emit(msg.name, msg.data, sendResponse);
 	        })();
 	      }
 	    });
@@ -1103,13 +1102,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this.once('disconnect',
 	    /**
 	     * 当连接断开时，告诉所有等待响应的消息一个错误
-	     * @param {Boolean} isRemote - 连接是否是被远程端口断开的
+	     * @param {Boolean} isByOtherSide - 连接是否是被另一端断开的
 	     */
-	    function (isRemote) {
+	    function (isByOtherSide) {
 	      _this.disconnected = true;
 	      _this.disconnect = noop;
 	      for (var key in waitingResponseMsg) {
-	        waitingResponseMsg[key](undefined, 'Connection has been disconnected by ' + (isRemote ? 'Server' : 'Client') + '.');
+	        waitingResponseMsg[key](new Error('Connection has been disconnected by ' + (isByOtherSide ? 'the other side' : 'yourself.') + '.'));
 	        delete waitingResponseMsg[key];
 	      }
 	    });
@@ -1163,6 +1162,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/**
 	 * 用一个类来描述 port 之间传递的消息。
+	 * 消息分为两种：请求消息与响应消息。
 	 *
 	 * 当本地端口将数据发送至远程端口时，
 	 * 如果用户希望在远程端口处理完消息时得到处理结果（即在调用 send 方法时传递了一个回调函数），
@@ -1173,7 +1173,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @typedef {Object} Message
 	 * @property {String} name - 消息的名称
 	 * @property {*} data - 消息携带的数据
+	 *
 	 * @property {String} id - 消息的 uuid
+	 *
+	 * @property {*} response - 如果消息是一次响应，则此属性为远程端口响应的数据
+	 * @property {*} error - 如果消息是一次响应，则此属性为远程端口响应的错误消息
 	 */
 	
 	exports.default = Port;
