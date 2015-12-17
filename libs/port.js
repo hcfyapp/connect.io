@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import uuid from 'node-uuid';
+import uuid from './uuid';
 
 function noop() {}
 
@@ -102,7 +102,7 @@ export default class Port extends EventEmitter {
 
     if ( onComplete ) {
       // 给消息带上 uuid，这样就能通过这个 id 定位到本地等待响应的回调函数
-      this._waiting[ msg.id = uuid.v4() ] = onComplete;
+      this._waiting[ msg.id = uuid() ] = onComplete;
     }
 
     this.port.postMessage( msg );
