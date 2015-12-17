@@ -35,8 +35,13 @@ background.html：
 const server = new ChromeConnect.Server();
 server.on('connect',(client)=> {
 
+  if (client.exteranl && client.port.sender.url === blackList) {
+    client.disconnect();
+    return;
+  }
+
   // Only send message to this connection client.
-  connection.send('welcome','hello world');
+  client.send('welcome','hello world');
 
   // Sending a message to everyone else except for the connection that starts it.
   client.broadcast('join','new client joined.');
@@ -51,6 +56,7 @@ server.on('connect',(client)=> {
     // Sending messge to every connection.
     server.send('Someone out');
   });
+
 });
 </script>
 ```
