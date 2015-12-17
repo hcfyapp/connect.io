@@ -32,6 +32,7 @@ export default class Port extends EventEmitter {
       // 否则说明这个消息是由远程端口发送的，要把 id 传回去，让远程端口定位到它的回调函数；此时这个消息是没有 name 的
       const cb = waitingResponseMsg[ id ];
       if ( cb ) {
+        delete waitingResponseMsg[ id ];
         cb( data );
       } else {
         let sent , sendResponse;
