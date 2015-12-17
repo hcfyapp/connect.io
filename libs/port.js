@@ -86,27 +86,35 @@ export default class Port extends EventEmitter {
   /**
    * 发送消息到另一端
    * @param {String} name - 消息名称
-   * @param {*} [data] - 数据
-   * @param {Function} [onComplete] - 完成时的回调函数
+   * @param {*} [data] 数据
+   * @param {Boolean} [needResponse] - 如果是 true，则此方法返回一个 Promise，当得到相应时会被 resolve 或 reject。
    *
    * @example
-   * send('x',{my:'data'})
-   * send('x',(res)=>{})
-   * send('x',{my:'data'},(res)=>{})
+   * send('name','data',true)
+   * send('name',true) - 这种情况下，data 为 undefined，needResponse 为 true
+   * send('name','data')
+   * send('name')
    */
-  send( name , data , onComplete ) {
-    if ( typeof data === 'function' ) {
-      onComplete = data;
+  send( name , data , needResponse ) {
+    if ( data === true && arguments.length === 2 ) {
       data = undefined;
+      needResponse = true;
     }
     const msg = { name , data };
-
-    if ( onComplete ) {
-      // 给消息带上 uuid，这样就能通过这个 id 定位到本地等待响应的回调函数
-      this._waiting[ msg.id = uuid() ] = onComplete;
+    let p;
+    if ( needResponse ) {
+      p = new Promise( ( resolve , reject )=> {
+        this._waiting[ msg.id = uuid() ] = ( error , response )=> {
+          if ( error ) {
+            reject( error );
+          } else {
+            resolve( response );
+          }
+        };
+      } );
     }
-
     this.port.postMessage( msg );
+    return p;
   }
 
   /**

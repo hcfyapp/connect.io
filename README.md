@@ -1,6 +1,6 @@
 # connect.io
 
- Real-time bidirectional event-based communication in Chrome extensions or Apps inspired by [Socket.IO](http://socket.io/).
+Real-time bidirectional event-based communication in Chrome extensions or Apps inspired by [Socket.IO](http://socket.io/).
 
 ## Install
 
@@ -24,14 +24,31 @@ server.on('connect',(client)=> {
   }
 
   // Only send message to this connection client.
-  // You also can get Client response.
-  client.send('welcome','hello world',(error,response) {
-    if(error){
-      console.log(error); // print "I'm not happy."
-    }else{
-      console.log(response); // print "Thanks!"
-    }
-  });
+  // If you want get response, pass "true" as the last argument,
+  // then "client.send()" will return a promise.
+  // Otherwise, "client.send()" just return undefined.
+  client
+    .send('welcome','hello world',true)
+    .then(
+      response => console.log(response), // print "Thanks!"
+      error => console.log(error) // print "I'm not happy."
+    );
+
+  // Note: if you just want send a "true" to the other side and don't want response,
+  // You must do:
+  client.send('send true and do not need response',true,false);
+
+  // I recommend you use 1 to instead of true:
+  client.send('use 1 to instead of true',1);
+
+  // and in Server:
+  //server.on('use 1 to instead of true',(data)=>{
+  //  console.log(data); // 1
+  //  if(data) {
+  //    //...
+  //  }
+  //});
+
 
   // Sending a message to everyone else except for the connection that starts it.
   client.broadcast('join','new client joined.');
@@ -67,18 +84,15 @@ client.on('welcome',(data,sendResponse) => {
 
 client.on('join',function(data){
   console.log(data); // "new client joined."
-})
-
-// get Server response
-client.send('report clients number', (error,response) => {
-
-  // Don't forget to handle error.
-  if( error ) {
-    throw error;
-  }
-
-  console.log(response); // 1
 });
+
+// get Server response.
+client
+  .send('report clients number',true)
+  .then(
+    res => console.log(res) , // 1
+    error => console.log(error)
+  );
 
 client.on('Someone out',()=>{
   // ...
