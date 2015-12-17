@@ -981,7 +981,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	
 	exports.default = function () {
-	  return Date.now();
+	  return String(Date.now());
 	};
 
 /***/ },
