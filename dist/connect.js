@@ -88,6 +88,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 	
+	var _typeof2 = __webpack_require__(16);
+	
+	var _typeof3 = _interopRequireDefault(_typeof2);
+	
 	var _classCallCheck2 = __webpack_require__(14);
 	
 	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
@@ -99,6 +103,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _inherits2 = __webpack_require__(41);
 	
 	var _inherits3 = _interopRequireDefault(_inherits2);
+	
+	var _nodeUuid = __webpack_require__(53);
+	
+	var _nodeUuid2 = _interopRequireDefault(_nodeUuid);
 	
 	var _port = __webpack_require__(48);
 	
@@ -114,12 +122,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  /**
 	   * 客户端
-	   * @param {String} [eId]
+	   * @param {String|Number} [eIdOrTabId] - 扩展 id 或标签页 id。默认值为 chrome.runtime.id
 	   */
 	
-	  function Client(eId) {
+	  function Client() {
+	    var eIdOrTabId = arguments.length <= 0 || arguments[0] === undefined ? runtime.id : arguments[0];
 	    (0, _classCallCheck3.default)(this, Client);
-	    return (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Client).call(this, runtime.connect(eId || runtime.id)));
+	
+	    var port = undefined;
+	
+	    switch (typeof eIdOrTabId === 'undefined' ? 'undefined' : (0, _typeof3.default)(eIdOrTabId)) {
+	      case 'string':
+	        port = runtime.connect(eIdOrTabId, { name: _nodeUuid2.default.v4() });
+	        break;
+	
+	      case 'number':
+	        port = chrome.tabs.connect(eIdOrTabId, { name: _nodeUuid2.default.v4() });
+	        break;
+	
+	      default:
+	        throw new Error('chrome.runtime.id is undefined, please specify the tabId.');
+	    }
+	
+	    return (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Client).call(this, port));
 	  }
 	
 	  return Client;
@@ -990,12 +1015,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	    (0, _classCallCheck3.default)(this, Port);
 	
 	    /**
-	     * 一个 hash map，键是消息的 uuid，值是一个函数
-	     * @type {{}}
+	     * 由 Client 生成一个 uuid name 并设为 Port 的 id。
+	     * @type {String}
 	     */
 	
 	    var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Port).call(this));
 	
+	    _this.id = port.name;
+	
+	    /**
+	     * 一个 hash map，键是消息的 uuid，值是一个函数
+	     * @type {{}}
+	     */
 	    var waitingResponseMsg = _this._waiting = {};
 	    _this.port = port;
 	
@@ -1065,11 +1096,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var msg = { name: name, data: data };
 	
 	      if (onComplete) {
-	        // 给消息带上 uuid，这样就能通过这个 id 定位到本地等待响应的毁掉函数
+	        // 给消息带上 uuid，这样就能通过这个 id 定位到本地等待响应的回调函数
 	        this._waiting[msg.id = _nodeUuid2.default.v4()] = onComplete;
 	      }
 	
 	      this.port.postMessage(msg);
+	    }
+	
+	    /**
+	     * 断开与远程端口的连接
+	     */
+	
+	  }, {
+	    key: 'disconnect',
+	    value: function disconnect() {
+	      this.port.disconnect();
 	    }
 	  }]);
 	  return Port;
@@ -5658,16 +5699,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    var ports = _this.ports = [];
 	
-	    runtime.onConnect.addListener(onPortConnect.bind(_this));
+	    runtime.onConnect.addListener(function (chromePort) {
+	      initServerPort(chromePort, false);
+	    });
 	
 	    var onConnectExternal = runtime.onConnectExternal;
 	
 	    if (onConnectExternal) {
-	      onConnectExternal.addListener(onPortConnect.bind(_this));
+	      onConnectExternal.addListener(function (chromePort) {
+	        initServerPort(chromePort, true);
+	      });
 	    }
 	
-	    function onPortConnect(chromePort) {
+	    function initServerPort(chromePort, isExternal) {
 	      var port = new _port2.default(chromePort);
+	      port.exteranl = isExternal;
 	      port.on('disconnect', function () {
 	        ports.splice(ports.indexOf(port), 1);
 	      });
@@ -5685,7 +5731,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	      };
 	      ports.push(port);
-	      this.emit('connect', port);
+	      server.emit('connect', port);
 	    }
 	    return _this;
 	  }

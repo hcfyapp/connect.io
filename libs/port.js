@@ -13,6 +13,12 @@ export default class Port extends EventEmitter {
     super();
 
     /**
+     * 由 Client 生成一个 uuid name 并设为 Port 的 id。
+     * @type {String}
+     */
+    this.id = port.name;
+
+    /**
      * 一个 hash map，键是消息的 uuid，值是一个函数
      * @type {{}}
      */
@@ -75,11 +81,18 @@ export default class Port extends EventEmitter {
     const msg = { name , data };
 
     if ( onComplete ) {
-      // 给消息带上 uuid，这样就能通过这个 id 定位到本地等待响应的毁掉函数
+      // 给消息带上 uuid，这样就能通过这个 id 定位到本地等待响应的回调函数
       this._waiting[ msg.id = uuid.v4() ] = onComplete;
     }
 
     this.port.postMessage( msg );
+  }
+
+  /**
+   * 断开与远程端口的连接
+   */
+  disconnect() {
+    this.port.disconnect();
   }
 }
 

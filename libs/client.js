@@ -13,12 +13,12 @@ export default class Client extends Port {
     let port;
 
     switch ( typeof eIdOrTabId ) {
-      case 'number':
-        port = chrome.tabs.connect( eIdOrTabId , { name : uuid.v4() } );
-        break;
-
       case 'string':
         port = runtime.connect( eIdOrTabId , { name : uuid.v4() } );
+        break;
+
+      case 'number':
+        port = chrome.tabs.connect( eIdOrTabId , { name : uuid.v4() } );
         break;
 
       default:

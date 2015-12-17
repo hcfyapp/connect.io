@@ -18,15 +18,20 @@ export default class Server extends EventEmitter {
      */
     const ports = this.ports = [];
 
-    runtime.onConnect.addListener( onPortConnect.bind( this ) );
+    runtime.onConnect.addListener( chromePort => {
+      initServerPort( chromePort , false );
+    } );
 
     let {onConnectExternal} = runtime;
     if ( onConnectExternal ) {
-      onConnectExternal.addListener( onPortConnect.bind( this ) );
+      onConnectExternal.addListener( chromePort => {
+        initServerPort( chromePort , true );
+      } );
     }
 
-    function onPortConnect( chromePort ) {
+    function initServerPort( chromePort , isExternal ) {
       const port = new Port( chromePort );
+      port.exteranl = isExternal;
       port.on( 'disconnect' , ()=> {
         ports.splice( ports.indexOf( port ) , 1 );
       } );
@@ -44,7 +49,7 @@ export default class Server extends EventEmitter {
         } );
       };
       ports.push( port );
-      this.emit( 'connect' , port );
+      server.emit( 'connect' , port );
     }
   }
 
