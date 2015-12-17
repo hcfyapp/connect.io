@@ -61,9 +61,9 @@ export default class Port extends EventEmitter {
       }
     } );
 
-    // 这个回调说明连接是被远程端口断开的
+    // 进入这个回调说明连接是被远程端口断开的
     port.onDisconnect.addListener( ()=> {
-      this.emit( 'disconnect' , true ); // true 表明连接是被远程端口断开的
+      this.emit( 'disconnect' , true );
     } );
 
     this.on( 'disconnect' ,
