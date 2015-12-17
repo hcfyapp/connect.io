@@ -18,6 +18,8 @@ export default class Port extends EventEmitter {
      */
     this.id = port.name;
 
+    this.disconnected = false;
+
     /**
      * 一个 hash map，键是消息的 uuid，值是一个函数
      * @type {{}}
@@ -70,6 +72,7 @@ export default class Port extends EventEmitter {
        * @param {Boolean} isRemote - 连接是否是被远程端口断开的
        */
       isRemote => {
+        this.disconnected = true;
         for ( let key in waitingResponseMsg ) {
           waitingResponseMsg[ key ]( undefined , `Connection has been disconnected by ${isRemote ? 'Server' : 'Client'}.` );
           delete waitingResponseMsg[ key ];
@@ -104,11 +107,13 @@ export default class Port extends EventEmitter {
   }
 
   /**
-   * 断开与远程端口的连接
+   * 主动断开与远程端口的连接
    */
   disconnect() {
-    this.port.disconnect();
-    this.emit( 'disconnect' , false );
+    if ( !this.disconnected ) {
+      this.port.disconnect();
+      this.emit( 'disconnect' , false );
+    }
   }
 }
 

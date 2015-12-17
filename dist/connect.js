@@ -5175,6 +5175,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    _this.id = port.name;
 	
+	    _this.disconnected = false;
+	
 	    /**
 	     * 一个 hash map，键是消息的 uuid，值是一个函数
 	     * @type {{}}
@@ -5233,6 +5235,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {Boolean} isRemote - 连接是否是被远程端口断开的
 	     */
 	    function (isRemote) {
+	      _this.disconnected = true;
 	      for (var key in waitingResponseMsg) {
 	        waitingResponseMsg[key](undefined, 'Connection has been disconnected by ' + (isRemote ? 'Server' : 'Client') + '.');
 	        delete waitingResponseMsg[key];
@@ -5271,14 +5274,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	     * 断开与远程端口的连接
+	     * 主动断开与远程端口的连接
 	     */
 	
 	  }, {
 	    key: 'disconnect',
 	    value: function disconnect() {
-	      this.port.disconnect();
-	      this.emit('disconnect', false);
+	      if (!this.disconnected) {
+	        this.port.disconnect();
+	        this.emit('disconnect', false);
+	      }
 	    }
 	  }]);
 	  return Port;
