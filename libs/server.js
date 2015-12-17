@@ -37,7 +37,7 @@ export default class Server extends EventEmitter {
     function initServerPort( chromePort , isExternal ) {
       const port = new Port( chromePort );
       port.exteranl = isExternal;
-      port.on( 'disconnect' , ()=> {
+      port.once( 'disconnect' , ()=> {
         ports.splice( ports.indexOf( port ) , 1 );
       } );
 

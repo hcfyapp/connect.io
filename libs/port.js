@@ -66,13 +66,15 @@ export default class Port extends EventEmitter {
       this.emit( 'disconnect' , true );
     } );
 
-    this.on( 'disconnect' ,
+    // 实际上，每个 port 的 disconnect 事件只会触发一次，所以我也只监听一次好了
+    this.once( 'disconnect' ,
       /**
        * 当连接断开时，告诉所有等待响应的消息一个错误
        * @param {Boolean} isRemote - 连接是否是被远程端口断开的
        */
       isRemote => {
         this.disconnected = true;
+        this.disconnect = noop;
         for ( let key in waitingResponseMsg ) {
           waitingResponseMsg[ key ]( undefined , `Connection has been disconnected by ${isRemote ? 'Server' : 'Client'}.` );
           delete waitingResponseMsg[ key ];

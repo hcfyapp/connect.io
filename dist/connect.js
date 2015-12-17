@@ -5224,18 +5224,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    });
 	
-	    // 这个回调说明连接是被远程端口断开的
+	    // 进入这个回调说明连接是被远程端口断开的
 	    port.onDisconnect.addListener(function () {
-	      _this.emit('disconnect', true); // true 表明连接是被远程端口断开的
+	      _this.emit('disconnect', true);
 	    });
 	
-	    _this.on('disconnect',
+	    // 实际上，每个 port 的 disconnect 事件只会触发一次，所以我也只监听一次好了
+	    _this.once('disconnect',
 	    /**
 	     * 当连接断开时，告诉所有等待响应的消息一个错误
 	     * @param {Boolean} isRemote - 连接是否是被远程端口断开的
 	     */
 	    function (isRemote) {
 	      _this.disconnected = true;
+	      _this.disconnect = noop;
 	      for (var key in waitingResponseMsg) {
 	        waitingResponseMsg[key](undefined, 'Connection has been disconnected by ' + (isRemote ? 'Server' : 'Client') + '.');
 	        delete waitingResponseMsg[key];
@@ -5744,7 +5746,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function initServerPort(chromePort, isExternal) {
 	      var port = new _port2.default(chromePort);
 	      port.exteranl = isExternal;
-	      port.on('disconnect', function () {
+	      port.once('disconnect', function () {
 	        ports.splice(ports.indexOf(port), 1);
 	      });
 	
