@@ -1,6 +1,6 @@
 # connect.io
 
-[chrome.runtime.connect](https://developer.chrome.com/extensions/runtime#method-connect) wrapper.
+ Real-time bidirectional event-based communication in Chrome extensions or Apps inspired by [Socket.IO](http://socket.io/).
 
 ## Install
 
@@ -15,7 +15,7 @@ Client(content-scripts.html)：
 ```html
 <script src="node_modules/connect.io/dist/connect.js"></script>
 <script>
-const client = new ChromeConnect.Client('optional extensions or apps id, default value is chrome.runtime.id');
+const client = new ChromeConnect.Client('optional extensions or apps id or tabId, default value is chrome.runtime.id');
 client.on('welcome',(msg) => {
   console.log(msg); // 'hello world'
 });
