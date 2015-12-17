@@ -8,8 +8,11 @@ export default class Client extends Port {
   /**
    * 客户端
    * @param {String|Number} [eIdOrTabId] - 扩展 id 或标签页 id。默认值为 chrome.runtime.id
+   * @param {Number} [frameId] - 如果第一个参数是 tabId，则此参数指定要连接到指定标签页的某个 frame。默认会连接到指定标签页的所有 frame。
+   * @see https://developer.chrome.com/extensions/runtime#method-connect
+   * @see https://developer.chrome.com/extensions/tabs#method-connect
    */
-  constructor( eIdOrTabId = runtime.id ) {
+  constructor( eIdOrTabId = runtime.id , frameId ) {
     let port;
 
     switch ( typeof eIdOrTabId ) {
@@ -18,7 +21,7 @@ export default class Client extends Port {
         break;
 
       case 'number':
-        port = chrome.tabs.connect( eIdOrTabId , { name : uuid.v4() } );
+        port = chrome.tabs.connect( eIdOrTabId , { name : uuid.v4() , frameId } );
         break;
 
       default:
