@@ -10,30 +10,6 @@ npm i -S connect.io
 
 ## Usage
 
-Client(content-scripts.html)：
-
-```html
-<script src="node_modules/connect.io/dist/connect.js"></script>
-<script>
-const client = new ChromeConnect.Client('optional extensions or apps id or tabId, default value is chrome.runtime.id');
-client.on('welcome',(msg) => {
-  console.log(msg); // 'hello world'
-});
-
-// get message acknowledgements
-client.send('report clients number', (number, error) => {
-
-  // When connection has been disconnected until get response, then error will be a string.
-  // It's often happened when you connect to a tab from extension but you don't have permission. (etc chrome:// 、chrome-extension://)
-  if( error ) {
-    throw new Error(error);
-  }
-
-  console.log(number); // 100
-});
-</script>
-```
-
 background.html：
 
 ```html
@@ -42,28 +18,78 @@ background.html：
 const server = new ChromeConnect.Server();
 server.on('connect',(client)=> {
 
-  if (client.exteranl && client.port.sender.url === blackList) {
+  if (client.exteranl && client.port.sender.url === YourBlackList) {
     client.disconnect();
     return;
   }
 
   // Only send message to this connection client.
-  client.send('welcome','hello world');
+  // You also can get Client response.
+  client.send('welcome','hello world',(error,response) {
+    if(error){
+      console.log(error); // print "I'm not happy."
+    }else{
+      console.log(response); // print "Thanks!"
+    }
+  });
 
   // Sending a message to everyone else except for the connection that starts it.
   client.broadcast('join','new client joined.');
 
-  // Sending acknowledgements
+  // Sending response to client
   client.on('report clients number', (data, sendResponse) => {
-    console.log(data); // when no data send to server, the data argument will be undefined
-    sendResponse(100);
+    sendResponse(null ,server.ports.length);
   });
 
-  client.on('disconect', () => {
+  // handle connection disconnect on Server
+  client.once('disconnect', isOtherSide => {
     // Sending messge to every connection.
-    server.send('Someone out');
+    server.send(isOtherSide ? 'Someone out by himself.' : 'I knock it out.');
   });
-
 });
+</script>
+```
+
+Client(content-scripts.html)：
+
+```html
+<script src="node_modules/connect.io/dist/connect.js"></script>
+<script>
+const client = new ChromeConnect.Client('optional extensions or apps id or tabId, default value is chrome.runtime.id');
+
+client.on('welcome',(data,sendResponse) => {
+  console.log(data); // 'hello world'
+  // if you want, you can send a response to Server.
+  sendResponse( null, 'Thanks!' );
+  // or you can send an error as a rejection.
+  sendResponse('I\'m not happy.');
+});
+
+client.on('join',function(data){
+  console.log(data); // "new client joined."
+})
+
+// get Server response
+client.send('report clients number', (error,response) => {
+
+  // Don't forget to handle error.
+  if( error ) {
+    throw error;
+  }
+
+  console.log(response); // 1
+});
+
+client.on('Someone out',()=>{
+  // ...
+});
+
+// handle connection disconnect on Client
+client.once('disconnect', isOtherSide => {
+  console.log('Connection disconnected by ', isOtherSide ? 'the other side' : 'myself', '.');
+});
+
+// disconnect the connection.
+client.disconnect();
 </script>
 ```
