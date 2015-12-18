@@ -67,7 +67,7 @@ content-scripts.js：
 
 ```js
 // sending one-time message
-ChromeConnect.Client.send({
+ChromeConnect.send({
   // specify extension or app id. Default value is chrome.runtime.id
   eId:'',
 
