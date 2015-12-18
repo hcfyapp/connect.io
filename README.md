@@ -1,6 +1,6 @@
 # connect.io
 
-Real-time bidirectional event-based communication in Chrome extensions or Apps inspired by [Socket.IO](http://socket.io/).
+Real-time bidirectional event-based and Promise friendly communication in Chrome extensions or Apps inspired by [Socket.IO](http://socket.io/).
 
 ## Install
 
@@ -38,11 +38,11 @@ server.on('connect',(client)=> {
   // You must do:
   client.send('send true and do not need response',true,false);
 
-  // I recommend you use 1 to instead of true:
+  // I recommend you use 1 to instead of true, so you can omit the last argument:
   client.send('use 1 to instead of true',1);
 
-  // and in Server:
-  //server.on('use 1 to instead of true',(data)=>{
+  // then in other side:
+  //client.on('use 1 to instead of true',(data)=>{
   //  console.log(data); // 1
   //  if(data) {
   //    //...
@@ -54,8 +54,8 @@ server.on('connect',(client)=> {
   client.broadcast('join','new client joined.');
 
   // Sending response to client
-  client.on('report clients number', (data, sendResponse) => {
-    sendResponse(null ,server.ports.length);
+  client.on('report clients number', (data, resolve, reject) => {
+    resolve(server.ports.length);
   });
 
   // handle connection disconnect on Server
@@ -74,12 +74,12 @@ Client(content-scripts.html)：
 <script>
 const client = new ChromeConnect.Client('optional extensions or apps id or tabId, default value is chrome.runtime.id');
 
-client.on('welcome',(data,sendResponse) => {
+client.on('welcome',(data,resolve,reject) => {
   console.log(data); // 'hello world'
-  // if you want, you can send a response to Server.
-  sendResponse( null, 'Thanks!' );
+  // if you want, you can send a response to Server as resolved.
+  resolve( 'Thanks!' );
   // or you can send an error as a rejection.
-  sendResponse('I\'m not happy.');
+  reject('I\'m not happy.');
 });
 
 client.on('join',function(data){
@@ -94,7 +94,7 @@ client
     error => console.log(error)
   );
 
-client.on('Someone out',()=>{
+client.on('Someone out',()=> {
   // ...
 });
 

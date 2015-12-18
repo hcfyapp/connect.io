@@ -37,28 +37,16 @@ export default class Port extends EventEmitter {
         delete waitingResponseMsg[ id ];
         cb( msg.error , msg.response );
       } else {
-        let sent , sendResponse;
         if ( id ) {
-
-          /**
-           * 发送处理结果至远程端口。这个函数只能被调用一次。
-           * @param {*} [error] - 错误
-           * @param {*} [response]
-           */
-          sendResponse = ( error , response ) => {
-            if ( sent ) {
-              console.warn( `Message "${msg.name}" was already response.` );
-              return;
-            }
-            sent = true;
-            // 发送回执
-            port.postMessage( { id , response , error } );
-          };
+          new Promise( ( resolve , reject )=> {
+            this.emit( msg.name , msg.data , resolve , reject );
+          } ).then(
+            response => port.postMessage( { id , response } ) ,
+            error => port.postMessage( { id , error } )
+          );
         } else {
-          sendResponse = noop;
+          this.emit( msg.name , msg.data , noop , noop );
         }
-
-        this.emit( msg.name , msg.data , sendResponse );
       }
     } );
 
