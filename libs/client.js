@@ -1,4 +1,3 @@
-import uuid from './uuid';
 import Port from './port';
 
 const {runtime} = chrome;
@@ -55,11 +54,11 @@ export default class Client extends Port {
 
     switch ( typeof eIdOrTabId ) {
       case 'string':
-        port = runtime.connect( eIdOrTabId , { name : uuid() } );
+        port = runtime.connect( eIdOrTabId );
         break;
 
       case 'number':
-        port = chrome.tabs.connect( eIdOrTabId , { name : uuid() , frameId } );
+        port = chrome.tabs.connect( eIdOrTabId , { frameId } );
         break;
 
       default:

@@ -11,13 +11,6 @@ export default class Port extends EventEmitter {
    */
   constructor( port ) {
     super();
-
-    /**
-     * 由 Client 生成一个 uuid name 并设为 Port 的 id。
-     * @type {String}
-     */
-    this.id = port.name;
-
     this.disconnected = false;
 
     /**
