@@ -10,11 +10,9 @@ npm i -S connect.io
 
 ## Usage
 
-background.html：
+background.js：
 
-```html
-<script src="node_modules/connect.io/dist/connect.js"></script>
-<script>
+```js
 const server = new ChromeConnect.Server();
 server.on('connect',(client)=> {
 
@@ -49,7 +47,6 @@ server.on('connect',(client)=> {
   //  }
   //});
 
-
   // Sending a message to everyone else except for the connection that starts it.
   client.broadcast('join','new client joined.');
 
@@ -64,20 +61,34 @@ server.on('connect',(client)=> {
     server.send(isOtherSide ? 'Someone out by himself.' : 'I knock it out.');
   });
 });
-</script>
 ```
 
-Client(content-scripts.html)：
+content-scripts.js：
 
-```html
-<script src="node_modules/connect.io/dist/connect.js"></script>
-<script>
-const client = new ChromeConnect.Client('optional extensions or apps id or tabId, default value is chrome.runtime.id');
+```js
+// sending one-time message
+ChromeConnect.Client.send({
+  // specify extension or app id. Default value is chrome.runtime.id
+  eId:'',
+
+  // or specify tabId if you want connect to content-scripts from extension.
+  tabId:23,
+  frameId:0, // see https://developer.chrome.com/extensions/tabs#method-connect
+
+  name:'your msg name',
+  data:{ your:'data' },
+  needResponse:true // if true, send() will return a Promise, otherwise it just return undefined.
+}).then(
+ // ....
+);
+
+// long-lived connections
+const client = new ChromeConnect.Client('optional extensions or apps id, or tabId and frameId. default value is chrome.runtime.id');
 
 client.on('welcome',(data,resolve,reject) => {
   console.log(data); // 'hello world'
   // if you want, you can send a response to Server as resolved.
-  resolve( 'Thanks!' );
+  resolve('Thanks!');
   // or you can send an error as a rejection.
   reject('I\'m not happy.');
 });
@@ -105,5 +116,4 @@ client.once('disconnect', isOtherSide => {
 
 // disconnect the connection.
 client.disconnect();
-</script>
 ```
