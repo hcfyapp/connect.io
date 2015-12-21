@@ -1,5 +1,12 @@
 # connect.io
 
+[![Build Status](https://img.shields.io/travis/lmk123/connect.io/master.svg?style=flat-square)](https://travis-ci.org/lmk123/connect.io)
+[![Coverage Status](https://img.shields.io/coveralls/lmk123/connect.io/master.svg?style=flat-square)](https://coveralls.io/github/lmk123/connect.io?branch=master)
+[![dependencies Status](https://img.shields.io/david/lmk123/connect.io.svg?style=flat-square)](https://david-dm.org/lmk123/connect.io)
+[![devDependencies Status](https://img.shields.io/david/dev/lmk123/connect.io.svg?style=flat-square)](https://david-dm.org/lmk123/connect.io#info=devDependencies)
+[![NPM Version](https://img.shields.io/npm/v/connect.io.svg?style=flat-square)](https://www.npmjs.com/package/connect.io)
+
+
 Real-time bidirectional event-based and Promise friendly communication in Chrome extensions or Apps inspired by [Socket.IO](http://socket.io/).
 
 ## Install
