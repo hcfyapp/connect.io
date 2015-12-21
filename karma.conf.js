@@ -2,12 +2,14 @@ const path = require( 'path' ) ,
   webpack = require( 'webpack' ) ,
   c = require( './webpack.config.js' );
 
+const testSource = path.resolve( './libs/' );
+
 c.entry = {}; // 清空 entry
 delete c.watch; // 关闭 watch 模式
 c.devtool = '#inline-source-map';
 
 const babelLoaderConfig = c.module.loaders.shift();
-babelLoaderConfig.exclude.push( path.resolve( 'src/' ) );
+babelLoaderConfig.exclude.push( testSource );
 
 // 必须告诉 isparta 我使用了哪些 babel 设置，见 https://github.com/deepsweet/isparta-loader/issues/10
 c.isparta = {
@@ -22,7 +24,7 @@ c.module.preLoaders = [
   babelLoaderConfig ,
   {
     test : /\.js$/ ,
-    include : path.resolve( 'src/' ) ,
+    include : testSource ,
     loader : 'isparta'
   }
 ];
