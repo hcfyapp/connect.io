@@ -3,13 +3,14 @@ import Port from './port';
 
 const {runtime} = chrome;
 
+// 单例模式在这里会出问题：https://phabricator.babeljs.io/T6883
 let server;
 export default class Server extends EventEmitter {
   constructor() {
+    super(); // super() 必须被第一个执行，否则会出错
     if ( server ) {
       return server;
     }
-    super();
     server = this;
 
     /**

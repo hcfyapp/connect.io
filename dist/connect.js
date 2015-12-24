@@ -2464,6 +2464,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _chrome = chrome;
 	var runtime = _chrome.runtime;
 	
+	// 单例模式在这里会出问题：https://phabricator.babeljs.io/T6883
+	
 	var server = undefined;
 	
 	var Server = (function (_EventEmitter) {
@@ -2471,15 +2473,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  function Server() {
 	    (0, _classCallCheck3.default)(this, Server);
+	    // super() 必须被第一个执行，否则会出错
+	
+	    var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Server).call(this));
 	
 	    if (server) {
 	      var _ret;
 	
 	      return _ret = server, (0, _possibleConstructorReturn3.default)(_this, _ret);
 	    }
-	
-	    var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Server).call(this));
-	
 	    server = _this;
 	
 	    /**
