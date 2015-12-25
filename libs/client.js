@@ -29,23 +29,24 @@ export default class Client extends Port {
 
     const np = options.namespace || 'default';
 
+    // 把参数放在 name 里传到服务端
+    const name = JSON.stringify( {
+      namespace : np
+    } );
+
     let port;
 
     switch ( typeof eIdOrTabId ) {
       case 'string':
         port = runtime.connect( eIdOrTabId , {
-          name : JSON.stringify( {
-            _namespace : options.namespace
-          } )
+          name
         } );
         break;
 
       case 'number':
         port = chrome.tabs.connect( eIdOrTabId , {
           frameId : options.frameId ,
-          name : JSON.stringify( {
-            namespace : np
-          } )
+          name
         } );
         break;
 
