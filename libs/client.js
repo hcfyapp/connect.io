@@ -31,7 +31,7 @@ export default class Client extends Port {
 
     // 把参数放在 name 里传到服务端
     const name = JSON.stringify( {
-      namespace : np
+      _namespace : np
     } );
 
     let port;

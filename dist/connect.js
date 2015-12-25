@@ -156,7 +156,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    // 把参数放在 name 里传到服务端
 	    var name = (0, _stringify2.default)({
-	      namespace: np
+	      _namespace: np
 	    });
 	
 	    var port = undefined;
