@@ -20,7 +20,7 @@ npm i -S connect.io
 background.js：
 
 ```js
-const server = new ChromeConnect.Server();
+const server = new ChromeConnect.Server('optionsal namespace, default is "default"');
 server.on('connect',(client)=> {
 
   if (client.exteranl && client.port.sender.url === YourBlackList) {
@@ -82,6 +82,8 @@ ChromeConnect.send({
   tabId:23,
   frameId:0, // see https://developer.chrome.com/extensions/tabs#method-connect
 
+  namespace:'default',
+
   name:'your msg name',
   data:{ your:'data' },
   needResponse:true // if true, send() will return a Promise, otherwise it just return undefined.
@@ -90,7 +92,10 @@ ChromeConnect.send({
 );
 
 // long-lived connections
-const client = new ChromeConnect.Client('optional extensions or apps id, or tabId and frameId. default value is chrome.runtime.id');
+const client = new ChromeConnect.Client('optional extensions or apps id. default value is chrome.runtime.id',{
+  frameId:0, // only used when first argument is tabId
+  namespace:''
+});
 
 client.on('welcome',(data,resolve,reject) => {
   console.log(data); // 'hello world'
