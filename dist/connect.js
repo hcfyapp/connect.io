@@ -1,3 +1,9 @@
+/*!
+ * connect.js v0.5.2
+ * https://github.com/lmk123/connect.io
+ * Copyright 2015 Milk Lee <me@limingkai.cn> (http://www.limingkai.cn/)
+ * Licensed under MIT
+ */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -2552,7 +2558,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return;
 	  }
 	
-	  var server = new Server(_namespace);
+	  var server = serversMap[_namespace];
+	  if (!server) {
+	    chromePort.disconnect();
+	    return;
+	  }
 	  var ports = server.ports;
 	
 	  var port = new _port2.default(chromePort);

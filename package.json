@@ -1,6 +1,6 @@
 {
   "name": "connect.io",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "chrome.runtime.connect wrapper that using Stock.IO API.",
   "scripts": {
     "webpack": "webpack"
@@ -32,11 +32,7 @@
     "type": "git",
     "url": "git+https://github.com/lmk123/connect.io.git"
   },
-  "author": {
-    "name": "Milk Lee",
-    "email": "me@limingkai.cn",
-    "url": "http://www.limingkai.cn/"
-  },
+  "author": "Milk Lee <me@limingkai.cn> (http://www.limingkai.cn/)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/lmk123/connect.io/issues"
