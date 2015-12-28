@@ -1,7 +1,7 @@
 import EventEmitter from 'events';
 import Port from './port';
 
-const {runtime} = chrome;
+const {runtime} = window.chrome || { runtime : false };
 
 /**
  * 一个 map，key 为 server 的 namespace，值为 server
@@ -9,17 +9,18 @@ const {runtime} = chrome;
  */
 const serversMap = {};
 
-runtime.onConnect.addListener( chromePort => {
-  initServerPort( chromePort , false );
-} );
-
-let {onConnectExternal} = runtime;
-if ( onConnectExternal ) {
-  onConnectExternal.addListener( chromePort => {
-    initServerPort( chromePort , true );
+if ( runtime ) {
+  runtime.onConnect.addListener( chromePort => {
+    initServerPort( chromePort , false );
   } );
-}
 
+  let {onConnectExternal} = runtime;
+  if ( onConnectExternal ) {
+    onConnectExternal.addListener( chromePort => {
+      initServerPort( chromePort , true );
+    } );
+  }
+}
 /**
  * 初始化服务端的端口
  * @param {chrome.runtime.Port} chromePort
@@ -70,7 +71,7 @@ function initServerPort( chromePort , isExternal ) {
   server.emit( 'connect' , port );
 }
 
-export default class Server extends EventEmitter {
+export default runtime ? class Server extends EventEmitter {
   constructor( namespace = 'default' ) {
     super(); // super() 必须被第一个执行，否则会出错
 
@@ -99,4 +100,4 @@ export default class Server extends EventEmitter {
       clientPort.send( name , data );
     } );
   }
-};
+} : function () { throw new Error( 'You\'re not in Google Chrome.' ); };

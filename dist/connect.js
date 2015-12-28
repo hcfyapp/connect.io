@@ -1,5 +1,5 @@
 /*!
- * connect.js v0.5.2
+ * connect.js v0.5.3
  * https://github.com/lmk123/connect.io
  * Copyright 2015 Milk Lee <me@limingkai.cn> (http://www.limingkai.cn/)
  * Licensed under MIT
@@ -125,11 +125,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var _chrome = chrome;
-	var runtime = _chrome.runtime;
-	var id = runtime.id;
+	var _ref = window.chrome || { runtime: false };
 	
-	var Client = (function (_Port) {
+	var runtime = _ref.runtime;
+	var id = runtime.id;
+	exports.default = runtime ? (function (_Port) {
 	  (0, _inherits3.default)(Client, _Port);
 	
 	  /**
@@ -192,10 +192,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  return Client;
-	})(_port2.default);
-	
-	exports.default = Client;
-	;
+	})(_port2.default) : function () {
+	  throw new Error('You\'re not in Google Chrome.');
+	};
 
 /***/ },
 /* 2 */
@@ -2514,8 +2513,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var _chrome = chrome;
-	var runtime = _chrome.runtime;
+	var _ref = window.chrome || { runtime: false };
+	
+	var runtime = _ref.runtime;
 	
 	/**
 	 * 一个 map，key 为 server 的 namespace，值为 server
@@ -2524,18 +2524,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var serversMap = {};
 	
-	runtime.onConnect.addListener(function (chromePort) {
-	  initServerPort(chromePort, false);
-	});
-	
-	var onConnectExternal = runtime.onConnectExternal;
-	
-	if (onConnectExternal) {
-	  onConnectExternal.addListener(function (chromePort) {
-	    initServerPort(chromePort, true);
+	if (runtime) {
+	  runtime.onConnect.addListener(function (chromePort) {
+	    initServerPort(chromePort, false);
 	  });
-	}
 	
+	  var onConnectExternal = runtime.onConnectExternal;
+	
+	  if (onConnectExternal) {
+	    onConnectExternal.addListener(function (chromePort) {
+	      initServerPort(chromePort, true);
+	    });
+	  }
+	}
 	/**
 	 * 初始化服务端的端口
 	 * @param {chrome.runtime.Port} chromePort
@@ -2588,7 +2589,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  server.emit('connect', port);
 	}
 	
-	var Server = (function (_EventEmitter) {
+	exports.default = runtime ? (function (_EventEmitter) {
 	  (0, _inherits3.default)(Server, _EventEmitter);
 	
 	  function Server() {
@@ -2631,10 +2632,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }]);
 	  return Server;
-	})(_events2.default);
-	
-	exports.default = Server;
-	;
+	})(_events2.default) : function () {
+	  throw new Error('You\'re not in Google Chrome.');
+	};
 
 /***/ },
 /* 87 */

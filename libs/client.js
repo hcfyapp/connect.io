@@ -1,9 +1,9 @@
 import Port from './port';
 
-const {runtime} = chrome;
+const {runtime} = window.chrome || { runtime : false };
 const {id} = runtime;
 
-export default class Client extends Port {
+export default runtime ? class Client extends Port {
 
   /**
    * 客户端
@@ -57,4 +57,4 @@ export default class Client extends Port {
     super( port );
     this.namespace = np;
   }
-};
+} : function () { throw new Error( 'You\'re not in Google Chrome.' ); };
