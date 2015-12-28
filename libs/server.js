@@ -41,7 +41,11 @@ function initServerPort( chromePort , isExternal ) {
     return;
   }
 
-  const server = new Server( _namespace );
+  const server = serversMap[ _namespace ];
+  if ( !server ) {
+    chromePort.disconnect();
+    return;
+  }
   const {ports} = server;
   const port = new Port( chromePort );
 
