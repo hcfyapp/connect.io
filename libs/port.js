@@ -1,7 +1,6 @@
 import EventEmitter from 'events';
 import uuid from './uuid';
-
-function noop() {}
+import noop from './noop';
 
 export default class Port extends EventEmitter {
 

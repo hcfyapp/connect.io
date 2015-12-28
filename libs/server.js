@@ -1,5 +1,6 @@
 import EventEmitter from 'events';
 import Port from './port';
+import noop from './noop';
 
 const {runtime} = window.chrome || { runtime : false };
 
@@ -9,17 +10,28 @@ const {runtime} = window.chrome || { runtime : false };
  */
 const serversMap = {};
 
-if ( runtime ) {
-  runtime.onConnect.addListener( chromePort => {
-    initServerPort( chromePort , false );
-  } );
+// 第一次调用 new Server() 的时候才添加这些监听
+let initListener;
 
-  let {onConnectExternal} = runtime;
-  if ( onConnectExternal ) {
-    onConnectExternal.addListener( chromePort => {
-      initServerPort( chromePort , true );
-    } );
-  }
+if ( runtime ) {
+  initListener = ()=> {
+    initListener = noop;
+    const {onConnect,onConnectExternal} = runtime;
+
+    if ( onConnect ) {
+      onConnect.addListener( chromePort => {
+        initServerPort( chromePort , false );
+      } );
+    }
+
+    if ( onConnectExternal ) {
+      onConnectExternal.addListener( chromePort => {
+        initServerPort( chromePort , true );
+      } );
+    }
+  };
+} else {
+  initListener = noop;
 }
 /**
  * 初始化服务端的端口
@@ -73,6 +85,7 @@ function initServerPort( chromePort , isExternal ) {
 
 export default runtime ? class Server extends EventEmitter {
   constructor( namespace = 'default' ) {
+    initListener();
     super(); // super() 必须被第一个执行，否则会出错
 
     const already = serversMap[ namespace ];

@@ -1,5 +1,5 @@
 /*!
- * connect.js v0.5.3
+ * connect.js v0.5.5
  * https://github.com/lmk123/connect.io
  * Copyright 2015 Milk Lee <me@limingkai.cn> (http://www.limingkai.cn/)
  * Licensed under MIT
@@ -1061,9 +1061,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _uuid2 = _interopRequireDefault(_uuid);
 	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	var _noop = __webpack_require__(88);
 	
-	function noop() {}
+	var _noop2 = _interopRequireDefault(_noop);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var Port = (function (_EventEmitter) {
 	  (0, _inherits3.default)(Port, _EventEmitter);
@@ -1107,7 +1109,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return port.postMessage({ id: id, error: error });
 	          });
 	        } else {
-	          _this.emit(msg.name, msg.data, noop, noop);
+	          _this.emit(msg.name, msg.data, _noop2.default, _noop2.default);
 	        }
 	      }
 	    });
@@ -1125,7 +1127,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    function (isByOtherSide) {
 	      _this.disconnected = true;
-	      _this.disconnect = noop;
+	      _this.disconnect = _noop2.default;
 	      for (var key in waitingResponseMsg) {
 	        waitingResponseMsg[key](new Error('Connection has been disconnected by ' + (isByOtherSide ? 'the other side' : 'yourself.') + '.'));
 	        delete waitingResponseMsg[key];
@@ -2511,6 +2513,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _port2 = _interopRequireDefault(_port);
 	
+	var _noop = __webpack_require__(88);
+	
+	var _noop2 = _interopRequireDefault(_noop);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var _ref = window.chrome || { runtime: false };
@@ -2524,18 +2530,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var serversMap = {};
 	
+	// 第一次调用 new Server() 的时候才添加这些监听
+	var initListener = undefined;
+	
 	if (runtime) {
-	  runtime.onConnect.addListener(function (chromePort) {
-	    initServerPort(chromePort, false);
-	  });
+	  initListener = function () {
+	    initListener = _noop2.default;
+	    var onConnect = runtime.onConnect;
+	    var onConnectExternal = runtime.onConnectExternal;
 	
-	  var onConnectExternal = runtime.onConnectExternal;
+	    if (onConnect) {
+	      onConnect.addListener(function (chromePort) {
+	        initServerPort(chromePort, false);
+	      });
+	    }
 	
-	  if (onConnectExternal) {
-	    onConnectExternal.addListener(function (chromePort) {
-	      initServerPort(chromePort, true);
-	    });
-	  }
+	    if (onConnectExternal) {
+	      onConnectExternal.addListener(function (chromePort) {
+	        initServerPort(chromePort, true);
+	      });
+	    }
+	  };
+	} else {
+	  initListener = _noop2.default;
 	}
 	/**
 	 * 初始化服务端的端口
@@ -2595,6 +2612,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Server() {
 	    var namespace = arguments.length <= 0 || arguments[0] === undefined ? 'default' : arguments[0];
 	    (0, _classCallCheck3.default)(this, Server);
+	
+	    initListener();
 	    // super() 必须被第一个执行，否则会出错
 	
 	    var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Server).call(this));
@@ -2697,6 +2716,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	    client.disconnect();
 	  }
 	}
+
+/***/ },
+/* 88 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function () {};
 
 /***/ }
 /******/ ])
