@@ -6,6 +6,10 @@
     "webpack": "webpack"
   },
   "main": "./libs/index.js",
+  "files": [
+    "dist",
+    "libs"
+  ],
   "devDependencies": {
     "babel-core": "^6.3.15",
     "babel-loader": "^6.2.0",
