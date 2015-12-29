@@ -13,7 +13,7 @@ module.exports = {
     loaders : [
       {
         test : /\.js$/ ,
-        exclude : [ /node_modules/ ] ,
+        exclude : [ /node_modules(?!(\/|\\?\\)(chrome\-env)\1)/ ] ,
         loader : 'babel' ,
         query : {
           presets : [ 'es2015' ] ,

@@ -1,4 +1,4 @@
-require( './helpers/chrome-mock' );
+require( 'chrome-env' );
 
 // require all `./tests/libs/**/*spec.js`
 const testsContext = require.context( './libs/' , true , /spec\.js$/ );
