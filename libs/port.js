@@ -13,7 +13,7 @@ export default class Port extends EventEmitter {
     this.disconnected = false;
 
     /**
-     * 一个 hash map，键是消息的 uuid，值是一个函数
+     * 一个 hash map，键是消息的 uuid，值是一个函数，用于保存那些待响应的函数
      * @type {{}}
      */
     const waitingResponseMsg = this._waiting = {};
@@ -22,7 +22,7 @@ export default class Port extends EventEmitter {
     port.onMessage.addListener( msg => {
       const {id} = msg;
 
-      // 如果在字典里找到了对应 id 的回调函数，那么说明这个消息是由本地端口发送的并有回调函数
+      // 如果在字典里找到了对应 id 的回调函数，那么说明这个消息是由本地端口发送的并有回调函数，
       // 否则说明这个消息是由远程端口发送的，要把 id 传回去，让远程端口定位到它的回调函数；此时这个消息是没有 name 的
       const cb = waitingResponseMsg[ id ];
       if ( cb ) {
@@ -43,9 +43,7 @@ export default class Port extends EventEmitter {
     } );
 
     // 进入这个回调说明连接是被远程端口断开的
-    port.onDisconnect.addListener( ()=> {
-      this.emit( 'disconnect' , true );
-    } );
+    port.onDisconnect.addListener( ()=> this.emit( 'disconnect' , true ) );
 
     // 实际上，每个 port 的 disconnect 事件只会触发一次，所以我也只监听一次好了
     this.once( 'disconnect' ,
@@ -54,10 +52,14 @@ export default class Port extends EventEmitter {
        * @param {Boolean} isByOtherSide - 连接是否是被另一端断开的
        */
       isByOtherSide => {
+        const error = new Error( `Connection has been disconnected by ${isByOtherSide ? 'the other side' : 'yourself.'}.` );
         this.disconnected = true;
         this.disconnect = noop;
+        this.send = ()=> {
+          throw error;
+        };
         for ( let key in waitingResponseMsg ) {
-          waitingResponseMsg[ key ]( new Error( `Connection has been disconnected by ${isByOtherSide ? 'the other side' : 'yourself.'}.` ) );
+          waitingResponseMsg[ key ]( error );
           delete waitingResponseMsg[ key ];
         }
       } );
@@ -98,13 +100,11 @@ export default class Port extends EventEmitter {
   }
 
   /**
-   * 主动断开与远程端口的连接
+   * 主动断开与远程端口的连接，此时不会触发 port.onDisconnect 事件。
    */
   disconnect() {
-    if ( !this.disconnected ) {
-      this.port.disconnect();
-      this.emit( 'disconnect' , false );
-    }
+    this.port.disconnect();
+    this.emit( 'disconnect' , false );
   }
 }
 

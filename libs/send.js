@@ -15,6 +15,8 @@ export default send;
  * @param {String} options.name - 消息名称
  * @param {*} [options.data] - 消息数据
  * @param {Boolean} [options.needResponse] - 是否需要响应。如果是，则方法会返回一个 Promise
+ *
+ * @return {Promise|undefined}
  */
 function send( options ) {
   let { eId , tabId , frameId , namespace, name , data , needResponse} = options;
