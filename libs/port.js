@@ -52,7 +52,7 @@ export default class extends EventEmitter {
        * @param {Boolean} isByOtherSide - 连接是否是被另一端断开的
        */
       isByOtherSide => {
-        const error = new Error( `Connection has been disconnected by ${isByOtherSide ? 'the other side' : 'yourself.'}.` );
+        const error = new Error( `Connection has been disconnected by ${isByOtherSide ? 'the other side' : 'yourself'}.` );
         this.disconnected = true;
         this.disconnect = noop;
         this.send = ()=> {
