@@ -1,5 +1,5 @@
 /*!
- * connect.js v0.5.5
+ * connect.js v0.5.6
  * https://github.com/lmk123/connect.io
  * Copyright 2015 Milk Lee <me@limingkai.cn> (http://www.limingkai.cn/)
  * Licensed under MIT
@@ -71,11 +71,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _client2 = _interopRequireDefault(_client);
 	
-	var _server = __webpack_require__(86);
+	var _server = __webpack_require__(87);
 	
 	var _server2 = _interopRequireDefault(_server);
 	
-	var _send = __webpack_require__(87);
+	var _send = __webpack_require__(88);
 	
 	var _send2 = _interopRequireDefault(_send);
 	
@@ -1061,7 +1061,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _uuid2 = _interopRequireDefault(_uuid);
 	
-	var _noop = __webpack_require__(88);
+	var _noop = __webpack_require__(86);
 	
 	var _noop2 = _interopRequireDefault(_noop);
 	
@@ -1083,7 +1083,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this.disconnected = false;
 	
 	    /**
-	     * 一个 hash map，键是消息的 uuid，值是一个函数
+	     * 一个 hash map，键是消息的 uuid，值是一个函数，用于保存那些待响应的函数
 	     * @type {{}}
 	     */
 	    var waitingResponseMsg = _this._waiting = {};
@@ -1092,7 +1092,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    port.onMessage.addListener(function (msg) {
 	      var id = msg.id;
 	
-	      // 如果在字典里找到了对应 id 的回调函数，那么说明这个消息是由本地端口发送的并有回调函数
+	      // 如果在字典里找到了对应 id 的回调函数，那么说明这个消息是由本地端口发送的并有回调函数，
 	      // 否则说明这个消息是由远程端口发送的，要把 id 传回去，让远程端口定位到它的回调函数；此时这个消息是没有 name 的
 	
 	      var cb = waitingResponseMsg[id];
@@ -1116,7 +1116,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    // 进入这个回调说明连接是被远程端口断开的
 	    port.onDisconnect.addListener(function () {
-	      _this.emit('disconnect', true);
+	      return _this.emit('disconnect', true);
 	    });
 	
 	    // 实际上，每个 port 的 disconnect 事件只会触发一次，所以我也只监听一次好了
@@ -1126,10 +1126,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {Boolean} isByOtherSide - 连接是否是被另一端断开的
 	     */
 	    function (isByOtherSide) {
+	      var error = new Error('Connection has been disconnected by ' + (isByOtherSide ? 'the other side' : 'yourself.') + '.');
 	      _this.disconnected = true;
 	      _this.disconnect = _noop2.default;
+	      _this.send = function () {
+	        throw error;
+	      };
 	      for (var key in waitingResponseMsg) {
-	        waitingResponseMsg[key](new Error('Connection has been disconnected by ' + (isByOtherSide ? 'the other side' : 'yourself.') + '.'));
+	        waitingResponseMsg[key](error);
 	        delete waitingResponseMsg[key];
 	      }
 	    });
@@ -1176,16 +1180,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	     * 主动断开与远程端口的连接
+	     * 主动断开与远程端口的连接，此时不会触发 port.onDisconnect 事件。
 	     */
 	
 	  }, {
 	    key: 'disconnect',
 	    value: function disconnect() {
-	      if (!this.disconnected) {
-	        this.port.disconnect();
-	        this.emit('disconnect', false);
-	      }
+	      this.port.disconnect();
+	      this.emit('disconnect', false);
 	    }
 	  }]);
 	  return Port;
@@ -2477,6 +2479,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 86 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function () {};
+
+/***/ },
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2513,7 +2527,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _port2 = _interopRequireDefault(_port);
 	
-	var _noop = __webpack_require__(88);
+	var _noop = __webpack_require__(86);
 	
 	var _noop2 = _interopRequireDefault(_noop);
 	
@@ -2656,7 +2670,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 87 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2690,6 +2704,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {String} options.name - 消息名称
 	 * @param {*} [options.data] - 消息数据
 	 * @param {Boolean} [options.needResponse] - 是否需要响应。如果是，则方法会返回一个 Promise
+	 *
+	 * @return {Promise|undefined}
 	 */
 	
 	function send(options) {
@@ -2716,18 +2732,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    client.disconnect();
 	  }
 	}
-
-/***/ },
-/* 88 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	exports.default = function () {};
 
 /***/ }
 /******/ ])
