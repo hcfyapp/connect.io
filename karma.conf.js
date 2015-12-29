@@ -15,9 +15,7 @@ babelLoaderConfig.exclude.push( testSource );
 c.isparta = {
   embedSource : true ,
   noAutoWrap : true ,
-  babel : {
-    presets : babelLoaderConfig.query.presets
-  }
+  babel : babelLoaderConfig.query
 };
 
 c.module.preLoaders = [
