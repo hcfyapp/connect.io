@@ -10,6 +10,7 @@ c.devtool = '#inline-source-map';
 
 const babelLoaderConfig = c.module.loaders.shift();
 babelLoaderConfig.exclude.push( testSource );
+babelLoaderConfig.query.presets.push( 'stage-3' );
 
 // 必须告诉 isparta 我使用了哪些 babel 设置，见 https://github.com/deepsweet/isparta-loader/issues/10
 c.isparta = {

@@ -1,3 +1,4 @@
+require( 'babel-polyfill' );
 require( 'chrome-env' );
 
 // require all `./tests/libs/**/*spec.js`
