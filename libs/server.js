@@ -83,7 +83,7 @@ function initServerPort( chromePort , isExternal ) {
   server.emit( 'connect' , port );
 }
 
-export default runtime ? class Server extends EventEmitter {
+export default runtime ? class extends EventEmitter {
   constructor( namespace = 'default' ) {
     initListener();
     super(); // super() 必须被第一个执行，否则会出错

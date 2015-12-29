@@ -2,7 +2,7 @@ import EventEmitter from 'events';
 import uuid from './uuid';
 import noop from './noop';
 
-export default class Port extends EventEmitter {
+export default class extends EventEmitter {
 
   /**
    * 对 chrome 的 Port 类型的包装

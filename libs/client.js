@@ -3,7 +3,7 @@ import Port from './port';
 const {runtime} = window.chrome || { runtime : false };
 const {id} = runtime;
 
-export default runtime ? class Client extends Port {
+export default runtime ? class extends Port {
 
   /**
    * 客户端
