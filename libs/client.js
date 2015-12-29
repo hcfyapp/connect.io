@@ -51,7 +51,7 @@ export default runtime ? class extends Port {
         break;
 
       default:
-        throw new Error( 'chrome.runtime.id is undefined, please specify the tabId.' );
+        throw new Error( 'chrome.runtime.id is undefined, you may in the normal web page, please specify the extension id which you want to connect.' );
     }
 
     super( port );
