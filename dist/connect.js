@@ -1,5 +1,5 @@
 /*!
- * connect.js v0.5.6
+ * connect.js v1.0.0
  * https://github.com/lmk123/connect.io
  * Copyright 2015 Milk Lee <me@limingkai.cn> (http://www.limingkai.cn/)
  * Licensed under MIT
@@ -130,7 +130,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var runtime = _ref.runtime;
 	var id = runtime.id;
 	exports.default = runtime ? (function (_Port) {
-	  (0, _inherits3.default)(Client, _Port);
+	  (0, _inherits3.default)(_class, _Port);
 	
 	  /**
 	   * 客户端
@@ -142,10 +142,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @see https://developer.chrome.com/extensions/tabs#method-connect
 	   */
 	
-	  function Client() {
+	  function _class() {
 	    var eIdOrTabId = arguments.length <= 0 || arguments[0] === undefined ? id : arguments[0];
 	    var options = arguments[1];
-	    (0, _classCallCheck3.default)(this, Client);
+	    (0, _classCallCheck3.default)(this, _class);
 	
 	    // new Client(options)
 	    if ((typeof eIdOrTabId === 'undefined' ? 'undefined' : (0, _typeof3.default)(eIdOrTabId)) === 'object') {
@@ -182,16 +182,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        break;
 	
 	      default:
-	        throw new Error('chrome.runtime.id is undefined, please specify the tabId.');
+	        throw new Error('chrome.runtime.id is undefined, you may in the normal web page, please specify the extension id which you want to connect.');
 	    }
 	
-	    var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Client).call(this, port));
+	    var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(_class).call(this, port));
 	
 	    _this.namespace = np;
 	    return _this;
 	  }
 	
-	  return Client;
+	  return _class;
 	})(_port2.default) : function () {
 	  throw new Error('You\'re not in Google Chrome.');
 	};
@@ -1067,18 +1067,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var Port = (function (_EventEmitter) {
-	  (0, _inherits3.default)(Port, _EventEmitter);
+	var _class = (function (_EventEmitter) {
+	  (0, _inherits3.default)(_class, _EventEmitter);
 	
 	  /**
 	   * 对 chrome 的 Port 类型的包装
 	   * @param {chrome.runtime.Port} port
 	   */
 	
-	  function Port(port) {
-	    (0, _classCallCheck3.default)(this, Port);
+	  function _class(port) {
+	    (0, _classCallCheck3.default)(this, _class);
 	
-	    var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Port).call(this));
+	    var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(_class).call(this));
 	
 	    _this.disconnected = false;
 	
@@ -1126,7 +1126,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {Boolean} isByOtherSide - 连接是否是被另一端断开的
 	     */
 	    function (isByOtherSide) {
-	      var error = new Error('Connection has been disconnected by ' + (isByOtherSide ? 'the other side' : 'yourself.') + '.');
+	      var error = new Error('Connection has been disconnected by ' + (isByOtherSide ? 'the other side' : 'yourself') + '.');
 	      _this.disconnected = true;
 	      _this.disconnect = _noop2.default;
 	      _this.send = function () {
@@ -1153,7 +1153,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * send('name')
 	   */
 	
-	  (0, _createClass3.default)(Port, [{
+	  (0, _createClass3.default)(_class, [{
 	    key: 'send',
 	    value: function send(name, data, needResponse) {
 	      var _this2 = this;
@@ -1190,9 +1190,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.emit('disconnect', false);
 	    }
 	  }]);
-	  return Port;
+	  return _class;
 	})(_events2.default);
-	
+
 	/**
 	 * 用一个类来描述 port 之间传递的消息。
 	 * 消息分为两种：请求消息与响应消息。
@@ -1212,8 +1212,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @property {*} response - 如果消息是一次响应，则此属性为远程端口响应的数据
 	 * @property {*} error - 如果消息是一次响应，则此属性为远程端口响应的错误消息
 	 */
-	
-	exports.default = Port;
+
+	exports.default = _class;
 
 /***/ },
 /* 51 */
@@ -2599,7 +2599,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  var port = new _port2.default(chromePort);
 	
-	  port.exteranl = isExternal;
+	  port.external = isExternal;
 	  port.once('disconnect', function () {
 	    ports.splice(ports.indexOf(port), 1);
 	  });
@@ -2621,16 +2621,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	
 	exports.default = runtime ? (function (_EventEmitter) {
-	  (0, _inherits3.default)(Server, _EventEmitter);
+	  (0, _inherits3.default)(_class, _EventEmitter);
 	
-	  function Server() {
+	  function _class() {
 	    var namespace = arguments.length <= 0 || arguments[0] === undefined ? 'default' : arguments[0];
-	    (0, _classCallCheck3.default)(this, Server);
+	    (0, _classCallCheck3.default)(this, _class);
 	
 	    initListener();
 	    // super() 必须被第一个执行，否则会出错
 	
-	    var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Server).call(this));
+	    var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(_class).call(this));
 	
 	    var already = serversMap[namespace];
 	    if (already) {
@@ -2656,7 +2656,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @param {*} [data]
 	   */
 	
-	  (0, _createClass3.default)(Server, [{
+	  (0, _createClass3.default)(_class, [{
 	    key: 'send',
 	    value: function send(name, data) {
 	      this.ports.forEach(function (clientPort) {
@@ -2664,7 +2664,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      });
 	    }
 	  }]);
-	  return Server;
+	  return _class;
 	})(_events2.default) : function () {
 	  throw new Error('You\'re not in Google Chrome.');
 	};
