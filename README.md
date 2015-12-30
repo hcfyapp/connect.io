@@ -23,7 +23,7 @@ background.js：
 const server = new ChromeConnect.Server('optionsal namespace, default is "default"');
 server.on('connect',(client)=> {
 
-  if (client.exteranl && client.port.sender.url === YourBlackList) {
+  if (client.external && client.port.sender.url === YourBlackList) {
     client.disconnect();
     return;
   }

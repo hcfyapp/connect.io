@@ -62,7 +62,7 @@ function initServerPort( chromePort , isExternal ) {
   const {ports} = server;
   const port = new Port( chromePort );
 
-  port.exteranl = isExternal;
+  port.external = isExternal;
   port.once( 'disconnect' , ()=> {
     ports.splice( ports.indexOf( port ) , 1 );
   } );
