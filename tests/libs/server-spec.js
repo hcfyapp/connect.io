@@ -24,7 +24,7 @@ describe( 'Server 构造函数' , ()=> {
       const cp = new ChromePort();
       cp.name = '{"_namespace":"external namespace"}';
       onConnectExternal( cp );
-      expect( s.ports[ 0 ].exteranl ).toBe( true );
+      expect( s.ports[ 0 ].external ).toBe( true );
     } );
 
     it( '若 port.name 不是 JSON 则不作任何处理' , ()=> {
