@@ -1,7 +1,7 @@
 import Port from './port';
+import runtime from './runtime';
 
-const {runtime} = window.chrome || { runtime : false };
-const {id} = runtime;
+const id = runtime && runtime.id;
 
 export default runtime ? class extends Port {
 

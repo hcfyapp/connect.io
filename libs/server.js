@@ -1,8 +1,7 @@
 import EventEmitter from 'events';
 import Port from './port';
 import noop from './noop';
-
-const {runtime} = window.chrome || { runtime : false };
+import runtime from './runtime';
 
 /**
  * 一个 map，key 为 server 的 namespace，值为 server
