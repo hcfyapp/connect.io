@@ -1,5 +1,5 @@
 /*!
- * connect.js v1.0.0
+ * connect.js v1.0.1
  * https://github.com/lmk123/connect.io
  * Copyright 2015 Milk Lee <me@limingkai.cn> (http://www.limingkai.cn/)
  * Licensed under MIT
@@ -17,41 +17,41 @@
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/
+
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-/******/
+
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/
+
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-/******/
+
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
+
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/
+
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
-/******/
+
+
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-/******/
+
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
-/******/
+
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
@@ -61,26 +61,26 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	
+
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	exports.send = exports.Server = exports.Client = undefined;
-	
+
 	var _client = __webpack_require__(1);
-	
+
 	var _client2 = _interopRequireDefault(_client);
-	
-	var _server = __webpack_require__(87);
-	
+
+	var _server = __webpack_require__(88);
+
 	var _server2 = _interopRequireDefault(_server);
-	
-	var _send = __webpack_require__(88);
-	
+
+	var _send = __webpack_require__(89);
+
 	var _send2 = _interopRequireDefault(_send);
-	
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
+
 	exports.Client = _client2.default;
 	exports.Server = _server2.default;
 	exports.send = _send2.default;
@@ -90,48 +90,50 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	
+
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	
+
 	var _getPrototypeOf = __webpack_require__(2);
-	
+
 	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
-	
+
 	var _stringify = __webpack_require__(14);
-	
+
 	var _stringify2 = _interopRequireDefault(_stringify);
-	
+
 	var _typeof2 = __webpack_require__(16);
-	
+
 	var _typeof3 = _interopRequireDefault(_typeof2);
-	
+
 	var _classCallCheck2 = __webpack_require__(41);
-	
+
 	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-	
+
 	var _possibleConstructorReturn2 = __webpack_require__(42);
-	
+
 	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-	
+
 	var _inherits2 = __webpack_require__(43);
-	
+
 	var _inherits3 = _interopRequireDefault(_inherits2);
-	
+
 	var _port = __webpack_require__(50);
-	
+
 	var _port2 = _interopRequireDefault(_port);
-	
+
+	var _runtime = __webpack_require__(87);
+
+	var _runtime2 = _interopRequireDefault(_runtime);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var _ref = window.chrome || { runtime: false };
-	
-	var runtime = _ref.runtime;
-	var id = runtime.id;
-	exports.default = runtime ? (function (_Port) {
+
+	var id = _runtime2.default && _runtime2.default.id;
+
+	exports.default = _runtime2.default ? function (_Port) {
 	  (0, _inherits3.default)(_class, _Port);
-	
+
 	  /**
 	   * 客户端
 	   * @param {String|Number} [eIdOrTabId] - 扩展 id 或标签页 id。默认值为 chrome.runtime.id
@@ -141,58 +143,58 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @see https://developer.chrome.com/extensions/runtime#method-connect
 	   * @see https://developer.chrome.com/extensions/tabs#method-connect
 	   */
-	
+
 	  function _class() {
 	    var eIdOrTabId = arguments.length <= 0 || arguments[0] === undefined ? id : arguments[0];
 	    var options = arguments[1];
 	    (0, _classCallCheck3.default)(this, _class);
-	
+
 	    // new Client(options)
 	    if ((typeof eIdOrTabId === 'undefined' ? 'undefined' : (0, _typeof3.default)(eIdOrTabId)) === 'object') {
 	      options = eIdOrTabId;
 	      eIdOrTabId = id;
 	    }
 	    // new Client(eIdOrTabId,options) is default.
-	
+
 	    if (!options) {
 	      options = {};
 	    }
-	
+
 	    var np = options.namespace || 'default';
-	
+
 	    // 把参数放在 name 里传到服务端
 	    var name = (0, _stringify2.default)({
 	      _namespace: np
 	    });
-	
+
 	    var port = undefined;
-	
+
 	    switch (typeof eIdOrTabId === 'undefined' ? 'undefined' : (0, _typeof3.default)(eIdOrTabId)) {
 	      case 'string':
-	        port = runtime.connect(eIdOrTabId, {
+	        port = _runtime2.default.connect(eIdOrTabId, {
 	          name: name
 	        });
 	        break;
-	
+
 	      case 'number':
 	        port = chrome.tabs.connect(eIdOrTabId, {
 	          frameId: options.frameId,
 	          name: name
 	        });
 	        break;
-	
+
 	      default:
 	        throw new Error('chrome.runtime.id is undefined, you may in the normal web page, please specify the extension id which you want to connect.');
 	    }
-	
+
 	    var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(_class).call(this, port));
-	
+
 	    _this.namespace = np;
 	    return _this;
 	  }
-	
+
 	  return _class;
-	})(_port2.default) : function () {
+	}(_port2.default) : function () {
 	  throw new Error('You\'re not in Google Chrome.');
 	};
 
@@ -215,7 +217,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// 19.1.2.9 Object.getPrototypeOf(O)
 	var toObject = __webpack_require__(5);
-	
+
 	__webpack_require__(7)('getPrototypeOf', function($getPrototypeOf){
 	  return function getPrototypeOf(it){
 	    return $getPrototypeOf(toObject(it));
@@ -265,7 +267,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  , core      = __webpack_require__(10)
 	  , ctx       = __webpack_require__(11)
 	  , PROTOTYPE = 'prototype';
-	
+
 	var $export = function(type, name, source){
 	  var IS_FORCED = type & $export.F
 	    , IS_GLOBAL = type & $export.G
@@ -390,13 +392,13 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	
+
 	var _Symbol = __webpack_require__(17)["default"];
-	
+
 	exports["default"] = function (obj) {
 	  return obj && obj.constructor === _Symbol ? "symbol" : typeof obj;
 	};
-	
+
 	exports.__esModule = true;
 
 /***/ },
@@ -451,7 +453,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  , AllSymbols     = shared('symbols')
 	  , useNative      = typeof $Symbol == 'function'
 	  , ObjectProto    = Object.prototype;
-	
+
 	// fallback for old Android, https://code.google.com/p/v8/issues/detail?id=687
 	var setSymbolDesc = DESCRIPTORS && $fails(function(){
 	  return _create(setDesc({}, 'a', {
@@ -463,7 +465,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  setDesc(it, key, D);
 	  if(protoDesc && it !== ObjectProto)setDesc(ObjectProto, key, protoDesc);
 	} : setDesc;
-	
+
 	var wrap = function(tag){
 	  var sym = AllSymbols[tag] = _create($Symbol.prototype);
 	  sym._k = tag;
@@ -476,11 +478,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  });
 	  return sym;
 	};
-	
+
 	var isSymbol = function(it){
 	  return typeof it == 'symbol';
 	};
-	
+
 	var $defineProperty = function defineProperty(it, key, D){
 	  if(D && has(AllSymbols, key)){
 	    if(!D.enumerable){
@@ -553,7 +555,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // V8 throws on boxed symbols
 	  return _stringify([S]) != '[null]' || _stringify({a: S}) != '{}' || _stringify(Object(S)) != '{}';
 	});
-	
+
 	// 19.4.1.1 Symbol([description])
 	if(!useNative){
 	  $Symbol = function Symbol(){
@@ -563,11 +565,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  redefine($Symbol.prototype, 'toString', function toString(){
 	    return this._k;
 	  });
-	
+
 	  isSymbol = function(it){
 	    return it instanceof $Symbol;
 	  };
-	
+
 	  $.create     = $create;
 	  $.isEnum     = $propertyIsEnumerable;
 	  $.getDesc    = $getOwnPropertyDescriptor;
@@ -575,12 +577,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  $.setDescs   = $defineProperties;
 	  $.getNames   = $names.get = $getOwnPropertyNames;
 	  $.getSymbols = $getOwnPropertySymbols;
-	
+
 	  if(DESCRIPTORS && !__webpack_require__(39)){
 	    redefine(ObjectProto, 'propertyIsEnumerable', $propertyIsEnumerable, true);
 	  }
 	}
-	
+
 	var symbolStatics = {
 	  // 19.4.2.1 Symbol.for(key)
 	  'for': function(key){
@@ -613,13 +615,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var sym = wks(it);
 	  symbolStatics[it] = useNative ? sym : wrap(sym);
 	});
-	
+
 	setter = true;
-	
+
 	$export($export.G + $export.W, {Symbol: $Symbol});
-	
+
 	$export($export.S, 'Symbol', symbolStatics);
-	
+
 	$export($export.S + $export.F * !useNative, 'Object', {
 	  // 19.1.2.2 Object.create(O [, Properties])
 	  create: $create,
@@ -634,10 +636,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // 19.1.2.8 Object.getOwnPropertySymbols(O)
 	  getOwnPropertySymbols: $getOwnPropertySymbols
 	});
-	
+
 	// 24.3.2 JSON.stringify(value [, replacer [, space]])
 	$JSON && $export($export.S + $export.F * (!useNative || buggyJSON), 'JSON', {stringify: $stringify});
-	
+
 	// 19.4.3.5 Symbol.prototype[@@toStringTag]
 	setToStringTag($Symbol, 'Symbol');
 	// 20.2.1.9 Math[@@toStringTag]
@@ -731,7 +733,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var def = __webpack_require__(20).setDesc
 	  , has = __webpack_require__(21)
 	  , TAG = __webpack_require__(28)('toStringTag');
-	
+
 	module.exports = function(it, tag, stat){
 	  if(it && !has(it = stat ? it : it.prototype, TAG))def(it, TAG, {configurable: true, value: tag});
 	};
@@ -799,7 +801,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports) {
 
 	var toString = {}.toString;
-	
+
 	module.exports = function(it){
 	  return toString.call(it).slice(8, -1);
 	};
@@ -812,10 +814,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var toIObject = __webpack_require__(31)
 	  , getNames  = __webpack_require__(20).getNames
 	  , toString  = {}.toString;
-	
+
 	var windowNames = typeof window == 'object' && Object.getOwnPropertyNames
 	  ? Object.getOwnPropertyNames(window) : [];
-	
+
 	var getWindowNames = function(it){
 	  try {
 	    return getNames(it);
@@ -823,7 +825,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return windowNames.slice();
 	  }
 	};
-	
+
 	module.exports.get = function getOwnPropertyNames(it){
 	  if(windowNames && toString.call(it) == '[object Window]')return getWindowNames(it);
 	  return getNames(toIObject(it));
@@ -886,20 +888,20 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 40 */
 /***/ function(module, exports) {
 
-
+	
 
 /***/ },
 /* 41 */
 /***/ function(module, exports) {
 
 	"use strict";
-	
+
 	exports.default = function (instance, Constructor) {
 	  if (!(instance instanceof Constructor)) {
 	    throw new TypeError("Cannot call a class as a function");
 	  }
 	};
-	
+
 	exports.__esModule = true;
 
 /***/ },
@@ -907,21 +909,21 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	
+
 	var _typeof2 = __webpack_require__(16);
-	
+
 	var _typeof3 = _interopRequireDefault(_typeof2);
-	
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
+
 	exports.default = function (self, call) {
 	  if (!self) {
 	    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
 	  }
-	
+
 	  return call && ((typeof call === "undefined" ? "undefined" : (0, _typeof3.default)(call)) === "object" || typeof call === "function") ? call : self;
 	};
-	
+
 	exports.__esModule = true;
 
 /***/ },
@@ -929,16 +931,16 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	
+
 	var _Object$create = __webpack_require__(44)["default"];
-	
+
 	var _Object$setPrototypeOf = __webpack_require__(46)["default"];
-	
+
 	exports["default"] = function (subClass, superClass) {
 	  if (typeof superClass !== "function" && superClass !== null) {
 	    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
 	  }
-	
+
 	  subClass.prototype = _Object$create(superClass && superClass.prototype, {
 	    constructor: {
 	      value: subClass,
@@ -949,7 +951,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  });
 	  if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 	};
-	
+
 	exports.__esModule = true;
 
 /***/ },
@@ -1024,77 +1026,77 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	
+
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	
+
 	var _promise = __webpack_require__(51);
-	
+
 	var _promise2 = _interopRequireDefault(_promise);
-	
+
 	var _getPrototypeOf = __webpack_require__(2);
-	
+
 	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
-	
+
 	var _classCallCheck2 = __webpack_require__(41);
-	
+
 	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-	
+
 	var _createClass2 = __webpack_require__(81);
-	
+
 	var _createClass3 = _interopRequireDefault(_createClass2);
-	
+
 	var _possibleConstructorReturn2 = __webpack_require__(42);
-	
+
 	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-	
+
 	var _inherits2 = __webpack_require__(43);
-	
+
 	var _inherits3 = _interopRequireDefault(_inherits2);
-	
+
 	var _events = __webpack_require__(84);
-	
+
 	var _events2 = _interopRequireDefault(_events);
-	
+
 	var _uuid = __webpack_require__(85);
-	
+
 	var _uuid2 = _interopRequireDefault(_uuid);
-	
+
 	var _noop = __webpack_require__(86);
-	
+
 	var _noop2 = _interopRequireDefault(_noop);
-	
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var _class = (function (_EventEmitter) {
+
+	var _class = function (_EventEmitter) {
 	  (0, _inherits3.default)(_class, _EventEmitter);
-	
+
 	  /**
 	   * 对 chrome 的 Port 类型的包装
 	   * @param {chrome.runtime.Port} port
 	   */
-	
+
 	  function _class(port) {
 	    (0, _classCallCheck3.default)(this, _class);
-	
+
 	    var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(_class).call(this));
-	
+
 	    _this.disconnected = false;
-	
+
 	    /**
 	     * 一个 hash map，键是消息的 uuid，值是一个函数，用于保存那些待响应的函数
 	     * @type {{}}
 	     */
 	    var waitingResponseMsg = _this._waiting = {};
 	    _this.port = port;
-	
+
 	    port.onMessage.addListener(function (msg) {
 	      var id = msg.id;
-	
+
 	      // 如果在字典里找到了对应 id 的回调函数，那么说明这个消息是由本地端口发送的并有回调函数，
 	      // 否则说明这个消息是由远程端口发送的，要把 id 传回去，让远程端口定位到它的回调函数；此时这个消息是没有 name 的
-	
+
 	      var cb = waitingResponseMsg[id];
 	      if (cb) {
 	        delete waitingResponseMsg[id];
@@ -1113,12 +1115,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      }
 	    });
-	
+
 	    // 进入这个回调说明连接是被远程端口断开的
 	    port.onDisconnect.addListener(function () {
 	      return _this.emit('disconnect', true);
 	    });
-	
+
 	    // 实际上，每个 port 的 disconnect 事件只会触发一次，所以我也只监听一次好了
 	    _this.once('disconnect',
 	    /**
@@ -1139,7 +1141,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	    return _this;
 	  }
-	
+
 	  /**
 	   * 发送消息到另一端
 	   * @param {String} name - 消息名称
@@ -1152,12 +1154,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * send('name','data')
 	   * send('name')
 	   */
-	
+
 	  (0, _createClass3.default)(_class, [{
 	    key: 'send',
 	    value: function send(name, data, needResponse) {
 	      var _this2 = this;
-	
+
 	      if (data === true && arguments.length === 2) {
 	        data = undefined;
 	        needResponse = true;
@@ -1178,11 +1180,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.port.postMessage(msg);
 	      return p;
 	    }
-	
+
 	    /**
 	     * 主动断开与远程端口的连接，此时不会触发 port.onDisconnect 事件。
 	     */
-	
+
 	  }, {
 	    key: 'disconnect',
 	    value: function disconnect() {
@@ -1191,7 +1193,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }]);
 	  return _class;
-	})(_events2.default);
+	}(_events2.default);
 
 	/**
 	 * 用一个类来描述 port 之间传递的消息。
@@ -1237,7 +1239,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	var $at  = __webpack_require__(54)(true);
-	
+
 	// 21.1.3.27 String.prototype[@@iterator]()
 	__webpack_require__(56)(String, 'String', function(iterated){
 	  this._t = String(iterated); // target
@@ -1305,9 +1307,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  , FF_ITERATOR    = '@@iterator'
 	  , KEYS           = 'keys'
 	  , VALUES         = 'values';
-	
+
 	var returnThis = function(){ return this; };
-	
+
 	module.exports = function(Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCED){
 	  $iterCreate(Constructor, NAME, next);
 	  var getMethod = function(kind){
@@ -1372,10 +1374,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  , descriptor     = __webpack_require__(25)
 	  , setToStringTag = __webpack_require__(27)
 	  , IteratorPrototype = {};
-	
+
 	// 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
 	__webpack_require__(24)(IteratorPrototype, __webpack_require__(28)('iterator'), function(){ return this; });
-	
+
 	module.exports = function(Constructor, NAME, next){
 	  Constructor.prototype = $.create(IteratorPrototype, {next: descriptor(1, next)});
 	  setToStringTag(Constructor, NAME + ' Iterator');
@@ -1398,7 +1400,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  , step             = __webpack_require__(62)
 	  , Iterators        = __webpack_require__(57)
 	  , toIObject        = __webpack_require__(31);
-	
+
 	// 22.1.3.4 Array.prototype.entries()
 	// 22.1.3.13 Array.prototype.keys()
 	// 22.1.3.29 Array.prototype.values()
@@ -1420,10 +1422,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if(kind == 'values')return step(0, O[index]);
 	  return step(0, [index, O[index]]);
 	}, 'values');
-	
+
 	// argumentsList[@@iterator] is %ArrayProto_values% (9.4.4.6, 9.4.4.7)
 	Iterators.Arguments = Iterators.Array;
-	
+
 	addToUnscopables('keys');
 	addToUnscopables('values');
 	addToUnscopables('entries');
@@ -1468,13 +1470,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  , isNode     = classof(process) == 'process'
 	  , P          = global[PROMISE]
 	  , Wrapper;
-	
+
 	var testResolve = function(sub){
 	  var test = new P(function(){});
 	  if(sub)test.constructor = Object;
 	  return P.resolve(test) === test;
 	};
-	
+
 	var USE_NATIVE = function(){
 	  var works = false;
 	  function P2(x){
@@ -1501,7 +1503,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  } catch(e){ works = false; }
 	  return works;
 	}();
-	
+
 	// helpers
 	var sameConstructor = function(a, b){
 	  // library wrapper special case
@@ -1625,7 +1627,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    $reject.call({r: record, d: false}, e); // wrap
 	  }
 	};
-	
+
 	// constructor polyfill
 	if(!USE_NATIVE){
 	  // 25.4.3.1 Promise(executor)
@@ -1666,12 +1668,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  });
 	}
-	
+
 	$export($export.G + $export.W + $export.F * !USE_NATIVE, {Promise: P});
 	__webpack_require__(27)(P, PROMISE);
 	__webpack_require__(79)(PROMISE);
 	Wrapper = __webpack_require__(10)[PROMISE];
-	
+
 	// statics
 	$export($export.S + $export.F * !USE_NATIVE, PROMISE, {
 	  // 25.4.4.5 Promise.reject(r)
@@ -1745,7 +1747,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  , TAG = __webpack_require__(28)('toStringTag')
 	  // ES3 wrong here
 	  , ARG = cof(function(){ return arguments; }()) == 'Arguments';
-	
+
 	module.exports = function(it){
 	  var O, T, B;
 	  return it === undefined ? 'Undefined' : it === null ? 'Null'
@@ -1815,7 +1817,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Iterators  = __webpack_require__(57)
 	  , ITERATOR   = __webpack_require__(28)('iterator')
 	  , ArrayProto = Array.prototype;
-	
+
 	module.exports = function(it){
 	  return it !== undefined && (Iterators.Array === it || ArrayProto[ITERATOR] === it);
 	};
@@ -1877,7 +1879,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  , Promise   = global.Promise
 	  , isNode    = __webpack_require__(33)(process) == 'process'
 	  , head, last, notify;
-	
+
 	var flush = function(){
 	  var parent, domain, fn;
 	  if(isNode && (parent = process.domain)){
@@ -1894,7 +1896,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  } last = undefined;
 	  if(parent)parent.enter();
 	};
-	
+
 	// Node.js
 	if(isNode){
 	  notify = function(){
@@ -1925,7 +1927,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    macrotask.call(global, flush);
 	  };
 	}
-	
+
 	module.exports = function asap(fn){
 	  var task = {fn: fn, next: undefined, domain: isNode && process.domain};
 	  if(last)last.next = task;
@@ -2073,7 +2075,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  , $           = __webpack_require__(20)
 	  , DESCRIPTORS = __webpack_require__(22)
 	  , SPECIES     = __webpack_require__(28)('species');
-	
+
 	module.exports = function(KEY){
 	  var C = core[KEY];
 	  if(DESCRIPTORS && C && !C[SPECIES])$.setDesc(C, SPECIES, {
@@ -2088,13 +2090,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var ITERATOR     = __webpack_require__(28)('iterator')
 	  , SAFE_CLOSING = false;
-	
+
 	try {
 	  var riter = [7][ITERATOR]();
 	  riter['return'] = function(){ SAFE_CLOSING = true; };
 	  Array.from(riter, function(){ throw 2; });
 	} catch(e){ /* empty */ }
-	
+
 	module.exports = function(exec, skipClosing){
 	  if(!skipClosing && !SAFE_CLOSING)return false;
 	  var safe = false;
@@ -2113,13 +2115,13 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	
+
 	var _defineProperty = __webpack_require__(82);
-	
+
 	var _defineProperty2 = _interopRequireDefault(_defineProperty);
-	
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
+
 	exports.default = (function () {
 	  function defineProperties(target, props) {
 	    for (var i = 0; i < props.length; i++) {
@@ -2130,14 +2132,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      (0, _defineProperty2.default)(target, descriptor.key, descriptor);
 	    }
 	  }
-	
+
 	  return function (Constructor, protoProps, staticProps) {
 	    if (protoProps) defineProperties(Constructor.prototype, protoProps);
 	    if (staticProps) defineProperties(Constructor, staticProps);
 	    return Constructor;
 	  };
 	})();
-	
+
 	exports.__esModule = true;
 
 /***/ },
@@ -2179,23 +2181,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 	// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 	// USE OR OTHER DEALINGS IN THE SOFTWARE.
-	
+
 	function EventEmitter() {
 	  this._events = this._events || {};
 	  this._maxListeners = this._maxListeners || undefined;
 	}
 	module.exports = EventEmitter;
-	
+
 	// Backwards-compat with node 0.10.x
 	EventEmitter.EventEmitter = EventEmitter;
-	
+
 	EventEmitter.prototype._events = undefined;
 	EventEmitter.prototype._maxListeners = undefined;
-	
+
 	// By default EventEmitters will print a warning if more than 10 listeners are
 	// added to it. This is a useful default which helps finding memory leaks.
 	EventEmitter.defaultMaxListeners = 10;
-	
+
 	// Obviously not all Emitters should be limited to 10. This function allows
 	// that to be increased. Set to zero for unlimited.
 	EventEmitter.prototype.setMaxListeners = function(n) {
@@ -2204,13 +2206,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  this._maxListeners = n;
 	  return this;
 	};
-	
+
 	EventEmitter.prototype.emit = function(type) {
 	  var er, handler, len, args, i, listeners;
-	
+
 	  if (!this._events)
 	    this._events = {};
-	
+
 	  // If there is no 'error' event listener then throw.
 	  if (type === 'error') {
 	    if (!this._events.error ||
@@ -2222,12 +2224,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      throw TypeError('Uncaught, unspecified "error" event.');
 	    }
 	  }
-	
+
 	  handler = this._events[type];
-	
+
 	  if (isUndefined(handler))
 	    return false;
-	
+
 	  if (isFunction(handler)) {
 	    switch (arguments.length) {
 	      // fast cases
@@ -2252,26 +2254,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	    for (i = 0; i < len; i++)
 	      listeners[i].apply(this, args);
 	  }
-	
+
 	  return true;
 	};
-	
+
 	EventEmitter.prototype.addListener = function(type, listener) {
 	  var m;
-	
+
 	  if (!isFunction(listener))
 	    throw TypeError('listener must be a function');
-	
+
 	  if (!this._events)
 	    this._events = {};
-	
+
 	  // To avoid recursion in the case that type === "newListener"! Before
 	  // adding it to the listeners, first emit "newListener".
 	  if (this._events.newListener)
 	    this.emit('newListener', type,
 	              isFunction(listener.listener) ?
 	              listener.listener : listener);
-	
+
 	  if (!this._events[type])
 	    // Optimize the case of one listener. Don't need the extra array object.
 	    this._events[type] = listener;
@@ -2281,7 +2283,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  else
 	    // Adding the second element, need to change to array.
 	    this._events[type] = [this._events[type], listener];
-	
+
 	  // Check for listener leak
 	  if (isObject(this._events[type]) && !this._events[type].warned) {
 	    if (!isUndefined(this._maxListeners)) {
@@ -2289,7 +2291,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    } else {
 	      m = EventEmitter.defaultMaxListeners;
 	    }
-	
+
 	    if (m && m > 0 && this._events[type].length > m) {
 	      this._events[type].warned = true;
 	      console.error('(node) warning: possible EventEmitter memory ' +
@@ -2302,53 +2304,53 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }
 	  }
-	
+
 	  return this;
 	};
-	
+
 	EventEmitter.prototype.on = EventEmitter.prototype.addListener;
-	
+
 	EventEmitter.prototype.once = function(type, listener) {
 	  if (!isFunction(listener))
 	    throw TypeError('listener must be a function');
-	
+
 	  var fired = false;
-	
+
 	  function g() {
 	    this.removeListener(type, g);
-	
+
 	    if (!fired) {
 	      fired = true;
 	      listener.apply(this, arguments);
 	    }
 	  }
-	
+
 	  g.listener = listener;
 	  this.on(type, g);
-	
+
 	  return this;
 	};
-	
+
 	// emits a 'removeListener' event iff the listener was removed
 	EventEmitter.prototype.removeListener = function(type, listener) {
 	  var list, position, length, i;
-	
+
 	  if (!isFunction(listener))
 	    throw TypeError('listener must be a function');
-	
+
 	  if (!this._events || !this._events[type])
 	    return this;
-	
+
 	  list = this._events[type];
 	  length = list.length;
 	  position = -1;
-	
+
 	  if (list === listener ||
 	      (isFunction(list.listener) && list.listener === listener)) {
 	    delete this._events[type];
 	    if (this._events.removeListener)
 	      this.emit('removeListener', type, listener);
-	
+
 	  } else if (isObject(list)) {
 	    for (i = length; i-- > 0;) {
 	      if (list[i] === listener ||
@@ -2357,30 +2359,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	        break;
 	      }
 	    }
-	
+
 	    if (position < 0)
 	      return this;
-	
+
 	    if (list.length === 1) {
 	      list.length = 0;
 	      delete this._events[type];
 	    } else {
 	      list.splice(position, 1);
 	    }
-	
+
 	    if (this._events.removeListener)
 	      this.emit('removeListener', type, listener);
 	  }
-	
+
 	  return this;
 	};
-	
+
 	EventEmitter.prototype.removeAllListeners = function(type) {
 	  var key, listeners;
-	
+
 	  if (!this._events)
 	    return this;
-	
+
 	  // not listening for removeListener, no need to emit
 	  if (!this._events.removeListener) {
 	    if (arguments.length === 0)
@@ -2389,7 +2391,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      delete this._events[type];
 	    return this;
 	  }
-	
+
 	  // emit removeListener for all listeners on all events
 	  if (arguments.length === 0) {
 	    for (key in this._events) {
@@ -2400,9 +2402,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._events = {};
 	    return this;
 	  }
-	
+
 	  listeners = this._events[type];
-	
+
 	  if (isFunction(listeners)) {
 	    this.removeListener(type, listeners);
 	  } else if (listeners) {
@@ -2411,10 +2413,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.removeListener(type, listeners[listeners.length - 1]);
 	  }
 	  delete this._events[type];
-	
+
 	  return this;
 	};
-	
+
 	EventEmitter.prototype.listeners = function(type) {
 	  var ret;
 	  if (!this._events || !this._events[type])
@@ -2425,11 +2427,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    ret = this._events[type].slice();
 	  return ret;
 	};
-	
+
 	EventEmitter.prototype.listenerCount = function(type) {
 	  if (this._events) {
 	    var evlistener = this._events[type];
-	
+
 	    if (isFunction(evlistener))
 	      return 1;
 	    else if (evlistener)
@@ -2437,23 +2439,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  return 0;
 	};
-	
+
 	EventEmitter.listenerCount = function(emitter, type) {
 	  return emitter.listenerCount(type);
 	};
-	
+
 	function isFunction(arg) {
 	  return typeof arg === 'function';
 	}
-	
+
 	function isNumber(arg) {
 	  return typeof arg === 'number';
 	}
-	
+
 	function isObject(arg) {
 	  return typeof arg === 'object' && arg !== null;
 	}
-	
+
 	function isUndefined(arg) {
 	  return arg === void 0;
 	}
@@ -2464,7 +2466,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports) {
 
 	"use strict";
-	
+
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
@@ -2472,7 +2474,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * 原本我使用 node-uuid 生成 id，但是为此文件增加了 150KB，因为 babel 把 window.crypto 的 polyfill 加入了文件中；
 	 * 后来我想到客户端和服务端都运行在同一个浏览器中，所以可以用时间戳 + 随机数来做唯一 ID。
 	 */
-	
+
 	exports.default = function () {
 	  return String(Date.now()) + String(Math.random());
 	};
@@ -2482,83 +2484,95 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports) {
 
 	"use strict";
-	
+
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	
+
 	exports.default = function () {};
 
 /***/ },
 /* 87 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	'use strict';
-	
+	"use strict";
+
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	
+	var _window = window;
+	var chrome = _window.chrome;
+	exports.default = chrome && chrome.runtime;
+
+/***/ },
+/* 88 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
 	var _getPrototypeOf = __webpack_require__(2);
-	
+
 	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
-	
+
 	var _classCallCheck2 = __webpack_require__(41);
-	
+
 	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-	
+
 	var _createClass2 = __webpack_require__(81);
-	
+
 	var _createClass3 = _interopRequireDefault(_createClass2);
-	
+
 	var _possibleConstructorReturn2 = __webpack_require__(42);
-	
+
 	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-	
+
 	var _inherits2 = __webpack_require__(43);
-	
+
 	var _inherits3 = _interopRequireDefault(_inherits2);
-	
+
 	var _events = __webpack_require__(84);
-	
+
 	var _events2 = _interopRequireDefault(_events);
-	
+
 	var _port = __webpack_require__(50);
-	
+
 	var _port2 = _interopRequireDefault(_port);
-	
+
 	var _noop = __webpack_require__(86);
-	
+
 	var _noop2 = _interopRequireDefault(_noop);
-	
+
+	var _runtime = __webpack_require__(87);
+
+	var _runtime2 = _interopRequireDefault(_runtime);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var _ref = window.chrome || { runtime: false };
-	
-	var runtime = _ref.runtime;
-	
+
 	/**
 	 * 一个 map，key 为 server 的 namespace，值为 server
 	 * @type {{}}
 	 */
-	
 	var serversMap = {};
-	
+
 	// 第一次调用 new Server() 的时候才添加这些监听
 	var initListener = undefined;
-	
-	if (runtime) {
+
+	if (_runtime2.default) {
 	  initListener = function () {
 	    initListener = _noop2.default;
-	    var onConnect = runtime.onConnect;
-	    var onConnectExternal = runtime.onConnectExternal;
-	
+	    var onConnect = _runtime2.default.onConnect;
+	    var onConnectExternal = _runtime2.default.onConnectExternal;
+
 	    if (onConnect) {
 	      onConnect.addListener(function (chromePort) {
 	        initServerPort(chromePort, false);
 	      });
 	    }
-	
+
 	    if (onConnectExternal) {
 	      onConnectExternal.addListener(function (chromePort) {
 	        initServerPort(chromePort, true);
@@ -2576,34 +2590,34 @@ return /******/ (function(modules) { // webpackBootstrap
 	function initServerPort(chromePort, isExternal) {
 	  // 由 Client 发送过来的客户端一定带有 name，且 name 可转换为 JSON 并有 _namespace 属性
 	  var options = undefined;
-	
+
 	  try {
 	    options = JSON.parse(chromePort.name);
 	  } catch (e) {
 	    return;
 	  }
-	
+
 	  var _options = options;
 	  var _namespace = _options._namespace;
-	
+
 	  if (!_namespace) {
 	    return;
 	  }
-	
+
 	  var server = serversMap[_namespace];
 	  if (!server) {
 	    chromePort.disconnect();
 	    return;
 	  }
 	  var ports = server.ports;
-	
+
 	  var port = new _port2.default(chromePort);
-	
+
 	  port.external = isExternal;
 	  port.once('disconnect', function () {
 	    ports.splice(ports.indexOf(port), 1);
 	  });
-	
+
 	  /**
 	   * 广播消息的方法。消息将会发送到服务器的所有客户端，除了发起这个广播的客户端本身。
 	   * @param {String} name
@@ -2619,29 +2633,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	  ports.push(port);
 	  server.emit('connect', port);
 	}
-	
-	exports.default = runtime ? (function (_EventEmitter) {
+
+	exports.default = _runtime2.default ? function (_EventEmitter) {
 	  (0, _inherits3.default)(_class, _EventEmitter);
-	
+
 	  function _class() {
 	    var namespace = arguments.length <= 0 || arguments[0] === undefined ? 'default' : arguments[0];
 	    (0, _classCallCheck3.default)(this, _class);
-	
+
 	    initListener();
 	    // super() 必须被第一个执行，否则会出错
-	
+
 	    var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(_class).call(this));
-	
+
 	    var already = serversMap[namespace];
 	    if (already) {
 	      var _ret;
-	
+
 	      return _ret = already, (0, _possibleConstructorReturn3.default)(_this, _ret);
 	    }
 	    serversMap[namespace] = _this;
-	
+
 	    _this.namespace = namespace;
-	
+
 	    /**
 	     * 端口的集合
 	     * @type {Port[]}
@@ -2649,13 +2663,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this.ports = [];
 	    return _this;
 	  }
-	
+
 	  /**
 	   * 发送消息到此服务器下的所有客户端
 	   * @param {String} name
 	   * @param {*} [data]
 	   */
-	
+
 	  (0, _createClass3.default)(_class, [{
 	    key: 'send',
 	    value: function send(name, data) {
@@ -2665,32 +2679,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }]);
 	  return _class;
-	})(_events2.default) : function () {
+	}(_events2.default) : function () {
 	  throw new Error('You\'re not in Google Chrome.');
 	};
 
 /***/ },
-/* 88 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	
+
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	
+
 	var _promise = __webpack_require__(51);
-	
+
 	var _promise2 = _interopRequireDefault(_promise);
-	
+
 	var _client = __webpack_require__(1);
-	
+
 	var _client2 = _interopRequireDefault(_client);
-	
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
+
 	exports.default = send;
-	
+
 	/**
 	 * 发送一次性消息
 	 * @param options
@@ -2707,7 +2721,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * @return {Promise|undefined}
 	 */
-	
+
 	function send(options) {
 	  var eId = options.eId;
 	  var tabId = options.tabId;
@@ -2716,9 +2730,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var name = options.name;
 	  var data = options.data;
 	  var needResponse = options.needResponse;
-	
+
 	  var client = new _client2.default(tabId || eId, { frameId: frameId, namespace: namespace });
-	
+
 	  var p = client.send(name, data, needResponse);
 	  if (p) {
 	    return p.then(function (response) {
@@ -2737,4 +2751,3 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ ])
 });
 ;
-//# sourceMappingURL=connect.js.map

@@ -29,6 +29,5 @@ module.exports = {
       'Copyright 2015 ' + pkg.author + '\n' +
       'Licensed under ' + pkg.license , { entryOnly : true } )
   ] ,
-  watch : true ,
-  devtool : '#source-map'
+  watch : true
 };
