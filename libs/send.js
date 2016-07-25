@@ -1,6 +1,6 @@
-import Client from './client';
+import Client from './client'
 
-export default send;
+export default send
 
 /**
  * 发送一次性消息
@@ -18,24 +18,24 @@ export default send;
  *
  * @return {Promise|undefined}
  */
-function send( options ) {
-  let { eId , tabId , frameId , namespace, name , data , needResponse} = options;
+function send (options) {
+  const { eId, tabId, frameId, namespace, name, data, needResponse } = options
 
-  const client = new Client( tabId || eId , { frameId , namespace } );
+  const client = new Client(tabId || eId, { frameId, namespace })
 
-  const p = client.send( name , data , needResponse );
-  if ( p ) {
+  const p = client.send(name, data, needResponse)
+  if (p) {
     return p.then(
       response => {
-        client.disconnect();
-        return response;
-      } ,
+        client.disconnect()
+        return response
+      },
       error => {
-        client.disconnect();
-        return Promise.reject( error );
+        client.disconnect()
+        return Promise.reject(error)
       }
-    );
+    )
   } else {
-    client.disconnect();
+    client.disconnect()
   }
 }

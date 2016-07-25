@@ -1,33 +1,32 @@
-const pkg = require( './package.json' );
-const webpack = require( 'webpack' );
+const pkg = require('./package.json')
+const webpack = require('webpack')
+const path = require('path')
 
 module.exports = {
-  entry : './libs/index' ,
-  output : {
-    path : './dist' ,
-    filename : 'connect.js' ,
-    library : 'ChromeConnect' ,
-    libraryTarget : 'umd'
-  } ,
-  module : {
-    loaders : [
+  entry: './libs/index',
+  output: {
+    path: './dist',
+    filename: 'connect.js',
+    library: 'ChromeConnect',
+    libraryTarget: 'umd'
+  },
+  module: {
+    loaders: [
       {
-        test : /\.js$/ ,
-        exclude : [ /node_modules(?!(\/|\\?\\)(chrome\-env)\1)/ ] ,
-        loader : 'babel' ,
-        query : {
-          presets : [ 'es2015' ] ,
-          plugins : [ 'transform-runtime' ]
-        }
+        test: /\.js$/,
+        include: [
+          path.resolve(__dirname, './libs'),
+          path.resolve(__dirname, './node_modules/chrome-env')
+        ],
+        loader: 'babel-loader'
       }
     ]
-  } ,
-  plugins : [
+  },
+  plugins: [
     new webpack.BannerPlugin(
       'connect.js v' + pkg.version + '\n' +
       '' + pkg.homepage + '\n' +
       'Copyright 2015 ' + pkg.author + '\n' +
-      'Licensed under ' + pkg.license , { entryOnly : true } )
-  ] ,
-  watch : true
+      'Licensed under ' + pkg.license, { entryOnly: true })
+  ]
 };

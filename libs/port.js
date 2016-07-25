@@ -1,6 +1,6 @@
-import EventEmitter from 'events';
-import uuid from './uuid';
-import noop from './noop';
+import EventEmitter from 'events'
+import uuid from './uuid'
+import noop from './noop'
 
 export default class extends EventEmitter {
 
@@ -8,61 +8,61 @@ export default class extends EventEmitter {
    * 对 chrome 的 Port 类型的包装
    * @param {chrome.runtime.Port} port
    */
-  constructor( port ) {
-    super();
-    this.disconnected = false;
+  constructor (port) {
+    super()
+    this.disconnected = false
 
     /**
      * 一个 hash map，键是消息的 uuid，值是一个函数，用于保存那些待响应的函数
      * @type {{}}
      */
-    const waitingResponseMsg = this._waiting = {};
-    this.port = port;
+    const waitingResponseMsg = this._waiting = {}
+    this.port = port
 
-    port.onMessage.addListener( msg => {
-      const {id} = msg;
+    port.onMessage.addListener(msg => {
+      const { id } = msg
 
       // 如果在字典里找到了对应 id 的回调函数，那么说明这个消息是由本地端口发送的并有回调函数，
       // 否则说明这个消息是由远程端口发送的，要把 id 传回去，让远程端口定位到它的回调函数；此时这个消息是没有 name 的
-      const cb = waitingResponseMsg[ id ];
-      if ( cb ) {
-        delete waitingResponseMsg[ id ];
-        cb( msg.error , msg.response );
+      const cb = waitingResponseMsg[id]
+      if (cb) {
+        delete waitingResponseMsg[id]
+        cb(msg.error, msg.response)
       } else {
-        if ( id ) {
-          new Promise( ( resolve , reject )=> {
-            this.emit( msg.name , msg.data , resolve , reject );
-          } ).then(
-            response => port.postMessage( { id , response } ) ,
-            error => port.postMessage( { id , error } )
-          );
+        if (id) {
+          new Promise((resolve, reject) => {
+            this.emit(msg.name, msg.data, resolve, reject)
+          }).then(
+            response => port.postMessage({ id, response }),
+            error => port.postMessage({ id, error })
+          )
         } else {
-          this.emit( msg.name , msg.data , noop , noop );
+          this.emit(msg.name, msg.data, noop, noop)
         }
       }
-    } );
+    })
 
     // 进入这个回调说明连接是被远程端口断开的
-    port.onDisconnect.addListener( ()=> this.emit( 'disconnect' , true ) );
+    port.onDisconnect.addListener(() => this.emit('disconnect', true))
 
     // 实际上，每个 port 的 disconnect 事件只会触发一次，所以我也只监听一次好了
-    this.once( 'disconnect' ,
+    this.once('disconnect',
       /**
        * 当连接断开时，告诉所有等待响应的消息一个错误
        * @param {Boolean} isByOtherSide - 连接是否是被另一端断开的
        */
       isByOtherSide => {
-        const error = new Error( `Connection has been disconnected by ${isByOtherSide ? 'the other side' : 'yourself'}.` );
-        this.disconnected = true;
-        this.disconnect = noop;
-        this.send = ()=> {
-          throw error;
-        };
-        for ( let key in waitingResponseMsg ) {
-          waitingResponseMsg[ key ]( error );
-          delete waitingResponseMsg[ key ];
+        const error = new Error(`Connection has been disconnected by ${isByOtherSide ? 'the other side' : 'yourself'}.`)
+        this.disconnected = true
+        this.disconnect = noop
+        this.send = () => {
+          throw error
         }
-      } );
+        for (let key in waitingResponseMsg) {
+          waitingResponseMsg[key](error)
+          delete waitingResponseMsg[key]
+        }
+      })
   }
 
   /**
@@ -77,34 +77,34 @@ export default class extends EventEmitter {
    * send('name','data')
    * send('name')
    */
-  send( name , data , needResponse ) {
-    if ( data === true && arguments.length === 2 ) {
-      data = undefined;
-      needResponse = true;
+  send (name, data, needResponse) {
+    if (data === true && arguments.length === 2) {
+      data = undefined
+      needResponse = true
     }
-    const msg = { name , data };
-    let p;
-    if ( needResponse ) {
-      p = new Promise( ( resolve , reject )=> {
-        this._waiting[ msg.id = uuid() ] = ( error , response )=> {
-          if ( error ) {
-            reject( error );
+    const msg = { name, data }
+    let p
+    if (needResponse) {
+      p = new Promise((resolve, reject) => {
+        this._waiting[msg.id = uuid()] = (error, response) => {
+          if (error) {
+            reject(error)
           } else {
-            resolve( response );
+            resolve(response)
           }
-        };
-      } );
+        }
+      })
     }
-    this.port.postMessage( msg );
-    return p;
+    this.port.postMessage(msg)
+    return p
   }
 
   /**
    * 主动断开与远程端口的连接，此时不会触发 port.onDisconnect 事件。
    */
-  disconnect() {
-    this.port.disconnect();
-    this.emit( 'disconnect' , false );
+  disconnect () {
+    this.port.disconnect()
+    this.emit('disconnect', false)
   }
 }
 

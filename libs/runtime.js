@@ -1,2 +1,2 @@
-const {chrome} = window;
-export default chrome && chrome.runtime;
+const { chrome } = window
+export default chrome && chrome.runtime
