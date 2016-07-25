@@ -1,9 +1,5 @@
 {
   "presets": [
-    "es2015-tiny",
-    "stage-3"
-  ],
-  "plugins": [
-    "transform-runtime"
+    "es2015-tiny"
   ]
 }

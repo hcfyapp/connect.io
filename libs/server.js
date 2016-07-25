@@ -13,7 +13,7 @@ const serversMap = {}
 let initListener
 
 if (runtime) {
-  initListener = ()=> {
+  initListener = () => {
     initListener = noop
     const { onConnect, onConnectExternal } = runtime
 

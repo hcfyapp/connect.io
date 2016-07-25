@@ -20,7 +20,7 @@ c.module.preLoaders = [
   {
     test: /\.js$/,
     include: testSource,
-    loader: 'isparta'
+    loader: 'isparta-loader'
   }
 ]
 

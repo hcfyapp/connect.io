@@ -16,6 +16,7 @@ module.exports = {
         test: /\.js$/,
         include: [
           path.resolve(__dirname, './libs'),
+          path.resolve(__dirname, './tests'),
           path.resolve(__dirname, './node_modules/chrome-env')
         ],
         loader: 'babel-loader'
