@@ -7,16 +7,12 @@ const testSource = path.resolve('./libs/')
 c.entry = {} // 清空 entry
 c.devtool = '#inline-source-map'
 
-const babelLoaderConfig = c.module.loaders.shift()
-babelLoaderConfig.include.shift()
-
 c.isparta = {
   embedSource: true,
   noAutoWrap: true
 }
 
 c.module.preLoaders = [
-  babelLoaderConfig,
   {
     test: /\.js$/,
     include: testSource,
@@ -28,9 +24,7 @@ module.exports = function (config) {
   config.set({
     basePath: '',
     frameworks: ['jasmine'],
-    files: [
-      'tests/index.js'
-    ],
+    files: ['tests/index.js'],
     preprocessors: {
       'tests/index.js': ['webpack']
     },
