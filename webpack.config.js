@@ -6,7 +6,7 @@ module.exports = {
   output: {
     path: './dist',
     filename: 'connect.js',
-    library: 'ChromeConnect',
+    library: 'chromeConnect',
     libraryTarget: 'umd'
   },
   module: {

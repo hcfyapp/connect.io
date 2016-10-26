@@ -21,7 +21,7 @@ I recommended you use it with [webpack](http://webpack.github.io/).
 background.js：
 
 ```js
-const server = ChromeConnect.createServer('optionsal namespace, default is "default"')
+const server = chromeConnect.createServer('optionsal namespace, default is "default"')
 server.on('connect', client => {
 
   if (client.external && client.port.sender.url === YourBlackList) {
@@ -75,7 +75,7 @@ content-scripts.js：
 
 ```js
 // sending one-time message
-ChromeConnect.send({
+chromeConnect.send({
   // specify extension/app or tab id. Default value is chrome.runtime.id
   id: '', // Number or String
 
@@ -91,7 +91,7 @@ ChromeConnect.send({
 )
 
 // long-lived connections
-const client = ChromeConnect.createClient('optional extensions/apps or tab id. default value is chrome.runtime.id',{
+const client = chromeConnect.createClient('optional extensions/apps or tab id. default value is chrome.runtime.id',{
   frameId:0, // only used when first argument is tabId
   namespace: ''
 })
