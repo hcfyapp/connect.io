@@ -10,7 +10,7 @@ Real-time bidirectional event-based and Promise friendly communication in Chrome
 
 ## Install
 
-### With <script> tag
+### With &lt;script&gt; tag
 
 Download script: https://unpkg.com/connect.io/dist/connect.js
 
