@@ -6,22 +6,42 @@
 [![devDependencies Status](https://img.shields.io/david/dev/Selection-Translator/connect.io.svg?style=flat-square)](https://david-dm.org/Selection-Translator/connect.io#info=devDependencies)
 [![NPM Version](https://img.shields.io/npm/v/connect.io.svg?style=flat-square)](https://www.npmjs.com/package/connect.io)
 
-Real-time bidirectional event-based and Promise friendly communication in Chrome extensions or Apps inspired by [Socket.IO](http://socket.io/).
+Real-time bidirectional event-based and Promise friendly communication in Chrome extensions/apps inspired by [Socket.IO](http://socket.io/).
 
 ## Install
+
+### With <script> tag
+
+Download script: https://unpkg.com/connect.io/dist/connect.js
+
+Then in your html:
+
+```html
+<script src="path/to/connect.js"></script>
+<script>chromeConnect.send(...)</script>
+```
+
+### With webpack
+
+Install via NPM:
 
 ```
 npm i -S connect.io
 ```
 
-I recommended you use it with [webpack](http://webpack.github.io/).
+Then:
+
+```js
+import chromeConnect from 'connect.io'
+chromeConnect.send(...)
+```
 
 ## Usage
 
 background.js：
 
 ```js
-const server = chromeConnect.createServer('optionsal namespace, default is "default"')
+const server = chromeConnect.createServer('optional namespace, default is "default"')
 server.on('connect', client => {
 
   if (client.external && client.port.sender.url === YourBlackList) {

@@ -6,7 +6,8 @@
     "dev": "webpack --watch",
     "build": "webpack -p",
     "test": "karma start",
-    "lint": "eslint --ignore-pattern '/dist/' --ignore-pattern '/coverage/' \"**/*.js\""
+    "lint": "eslint --ignore-pattern '/dist/' --ignore-pattern '/coverage/' \"**/*.js\"",
+    "prepublish": "npm run build"
   },
   "main": "./libs/index.js",
   "keywords": [
@@ -52,12 +53,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lmk123/connect.io.git"
+    "url": "git+https://github.com/Selection-Translator/connect.io.git"
   },
   "author": "Milk Lee <me@limingkai.cn> (http://www.limingkai.cn/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/lmk123/connect.io/issues"
+    "url": "https://github.com/Selection-Translator/connect.io/issues"
   },
-  "homepage": "https://github.com/lmk123/connect.io"
+  "homepage": "https://github.com/Selection-Translator/connect.io"
 }
