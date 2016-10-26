@@ -5,6 +5,25 @@ var path = require('path'),
 c.entry = {} // 清空 entry
 c.devtool = '#inline-source-map'
 
+var testSource = require('path').resolve('./libs/')
+var babelLoaderConfig = c.module.loaders.shift()
+
+// 必须告诉 isparta 我使用了哪些 babel 设置，见 https://github.com/deepsweet/isparta-loader/issues/10
+c.isparta = {
+  embedSource: true,
+  noAutoWrap: true,
+  babel: babelLoaderConfig.query
+}
+
+c.module.preLoaders = [
+  babelLoaderConfig,
+  {
+    test: /\.js$/,
+    include: testSource,
+    loader: 'isparta'
+  }
+]
+
 module.exports = function (config) {
   config.set({
     basePath: '',

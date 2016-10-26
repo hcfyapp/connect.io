@@ -27,11 +27,12 @@
     "tiny-emitter": "1.1.0"
   },
   "devDependencies": {
-    "es6-promise": "4.0.5",
     "babel-core": "6.18.0",
-    "babel-preset-es2015": "6.18.0",
     "babel-loader": "6.2.5",
+    "babel-preset-es2015": "6.18.0",
     "chrome-env": "0.0.6",
+    "es6-promise": "4.0.5",
+    "isparta-loader": "^2.0.0",
     "jasmine-core": "2.5.2",
     "karma": "1.3.0",
     "karma-chrome-launcher": "2.0.0",
