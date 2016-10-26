@@ -9,18 +9,6 @@ module.exports = {
     library: 'chromeConnect',
     libraryTarget: 'umd'
   },
-  module: {
-    loaders: [
-      {
-        test: /\.js$/,
-        include: /node_modules\/chrome-env\//,
-        loader: 'babel',
-        query: {
-          presets: ['es2015']
-        }
-      }
-    ]
-  },
   plugins: [
     new webpack.BannerPlugin(
       'connect.js v' + pkg.version + '\n' +
