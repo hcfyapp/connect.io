@@ -1,15 +1,19 @@
 language: node_js
 
 node_js:
-  - "4"
+  - "node"
 
 before_install:
+  # 删除镜像地址
+  - rm -f .npmrc
   - npm install -g npm
 
 before_script:
   - npm install karma-cli -g
 
-script: karma start --single-run --browsers PhantomJS --reporters progress,coverage,coveralls
+script:
+  - npm run lint
+  - karma start --single-run --browsers PhantomJS --reporters progress,coverage,coveralls
 
 notifications:
   email: false

@@ -1,0 +1,13 @@
+{
+  "globals": {
+    "chrome": false
+  },
+  "env": {
+    "browser": true,
+    "amd": true,
+    "jasmine": true
+  },
+  "extends": [
+    "standard"
+  ]
+}

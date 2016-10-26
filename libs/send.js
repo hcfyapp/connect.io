@@ -1,13 +1,11 @@
-import Client from './client';
+var createClient = require('./client')
 
-export default send;
+module.exports = send
 
 /**
  * 发送一次性消息
  * @param options
- * @param {String} [options.eId] - 应用或扩展的 id
- *
- * @param {Number} [options.tabId] - 要连接到的标签页 id
+ * @param {String} [options.id] - 如果是字符串，则视为应用或扩展的 id；如果是数字，则视为标签页的 id
  * @param {Number} [options.frameId] - 如果是要连接到标签页，可以指定要连接到其中的哪个 frame，否则会连接至所有 frame
  *
  * @param {String} [options.namespace] - 此客户端所属的服务端命名空间
@@ -18,24 +16,21 @@ export default send;
  *
  * @return {Promise|undefined}
  */
-function send( options ) {
-  let { eId , tabId , frameId , namespace, name , data , needResponse} = options;
-
-  const client = new Client( tabId || eId , { frameId , namespace } );
-
-  const p = client.send( name , data , needResponse );
-  if ( p ) {
-    return p.then(
-      response => {
-        client.disconnect();
-        return response;
-      } ,
-      error => {
-        client.disconnect();
-        return Promise.reject( error );
+function send (options) {
+  var client = createClient(options.id, { frameId: options.frameId, namespace: options.namespace })
+  var promise = client.send(options.name, options.data, options.needResponse)
+  if (promise) {
+    return promise.then(
+      function (response) {
+        client.disconnect()
+        return response
+      },
+      function (error) {
+        client.disconnect()
+        return Promise.reject(error)
       }
-    );
+    )
   } else {
-    client.disconnect();
+    client.disconnect()
   }
 }
