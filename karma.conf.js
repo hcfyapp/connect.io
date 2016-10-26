@@ -1,24 +1,9 @@
-const path = require('path'),
+var path = require('path'),
   webpack = require('webpack'),
   c = require('./webpack.config.js')
 
-const testSource = path.resolve('./libs/')
-
 c.entry = {} // 清空 entry
 c.devtool = '#inline-source-map'
-
-c.isparta = {
-  embedSource: true,
-  noAutoWrap: true
-}
-
-c.module.preLoaders = [
-  {
-    test: /\.js$/,
-    include: testSource,
-    loader: 'isparta-loader'
-  }
-]
 
 module.exports = function (config) {
   config.set({
@@ -26,7 +11,7 @@ module.exports = function (config) {
     frameworks: ['jasmine'],
     files: ['tests/index.js'],
     preprocessors: {
-      'tests/index.js': ['webpack']
+      'tests/index.js': ['webpack', 'sourcemap']
     },
     webpack: c,
     reporters: ['progress', 'coverage'],

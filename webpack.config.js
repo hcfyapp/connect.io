@@ -1,5 +1,5 @@
-const pkg = require('./package.json')
-const webpack = require('webpack')
+var pkg = require('./package.json')
+var webpack = require('webpack')
 
 module.exports = {
   entry: './libs/index',
@@ -8,6 +8,18 @@ module.exports = {
     filename: 'connect.js',
     library: 'ChromeConnect',
     libraryTarget: 'umd'
+  },
+  module: {
+    loaders: [
+      {
+        test: /\.js$/,
+        include: /node_modules\/chrome-env\//,
+        loader: 'babel',
+        query: {
+          presets: ['es2015']
+        }
+      }
+    ]
   },
   plugins: [
     new webpack.BannerPlugin(

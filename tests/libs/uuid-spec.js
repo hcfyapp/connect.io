@@ -1,19 +1,19 @@
-import uuid from '../../libs/uuid'
+var uuid = require('../../libs/utils/uuid')
 
-describe('uuid 函数', () => {
-  it('返回一个 string', () => {
+describe('uuid 函数', function () {
+  it('返回一个 string', function () {
     expect(typeof uuid()).toBe('string')
   })
 
-  it('多次返回的值都不相同', () => {
-    const m = []
-    for (let i = 0; i < 10000; i += 1) {
+  it('多次返回的值都不相同', function () {
+    var m = []
+    for (var i = 0; i < 10000; i += 1) {
       m[i] = uuid()
     }
 
-    const map = {}
+    var map = {}
 
-    m.some(v => {
+    m.some(function (v) {
       if (map[v]) {
         fail('uuid 的返回值中有重复元素：' + v)
         return true
@@ -21,6 +21,5 @@ describe('uuid 函数', () => {
         map[v] = 1
       }
     })
-
   })
 })
