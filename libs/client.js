@@ -13,7 +13,7 @@ module.exports = createClient
  * @see https://developer.chrome.com/extensions/runtime#method-connect
  * @see https://developer.chrome.com/extensions/tabs#method-connect
  */
-function createClient(eIdOrTabId, options) {
+function createClient (eIdOrTabId, options) {
   // createClient(options)
   if (typeof eIdOrTabId === 'object') {
     options = eIdOrTabId

@@ -11,7 +11,9 @@ before_install:
 before_script:
   - npm install karma-cli -g
 
-script: karma start --single-run --browsers PhantomJS --reporters progress,coverage,coveralls
+script:
+  - npm run lint
+  - karma start --single-run --browsers PhantomJS --reporters progress,coverage,coveralls
 
 notifications:
   email: false

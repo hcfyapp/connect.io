@@ -28,4 +28,4 @@ module.exports = {
       'Copyright 2015 ' + pkg.author + '\n' +
       'Licensed under ' + pkg.license, { entryOnly: true })
   ]
-};
+}

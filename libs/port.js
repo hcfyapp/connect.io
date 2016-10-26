@@ -52,7 +52,7 @@ function Port (port) {
      * @param {Boolean} isByOtherSide - 连接是否是被另一端断开的
      */
     function (isByOtherSide) {
-      var error = new Error('Connection has been disconnected by '+ (isByOtherSide ? 'the other side' : 'yourself') + '.')
+      var error = new Error('Connection has been disconnected by ' + (isByOtherSide ? 'the other side' : 'yourself') + '.')
       that.disconnected = true
       that.disconnect = noop
       that.send = function () {

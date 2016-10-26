@@ -26,7 +26,6 @@ describe('Client 构造函数', function () {
       // 这里传了一个不是 object、string 和 number 的值(一个函数)来模拟此现象。
       createClient(noop)
       fail('没有抛出错误')
-    }
-    catch (e) {}
+    } catch (e) {}
   })
 })

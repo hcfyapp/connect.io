@@ -9,7 +9,7 @@ describe('Server 构造函数', function () {
 
     beforeAll(function () { // onConnect 只会注册一次
       spyOn(chrome.runtime.onConnect, 'addListener').and.callFake(function (cb) { onConnect = cb })
-      spyOn(chrome.runtime.onConnectExternal, 'addListener').and.callFake(function (cb) { onConnectExternal = cb})
+      spyOn(chrome.runtime.onConnectExternal, 'addListener').and.callFake(function (cb) { onConnectExternal = cb })
       server = createServer('test namespace') // 相同命名空间的 server 也只会被初始化一次
     })
 

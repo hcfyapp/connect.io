@@ -82,8 +82,7 @@ describe('端口对象', function () {
         // 断开后再发送消息会抛出错误
         port.send()
         fail('没有抛出错误')
-      }
-      catch (e) {}
+      } catch (e) {}
     })
 
     it('若连接是由远程端口断开的则变更错误消息', function () {

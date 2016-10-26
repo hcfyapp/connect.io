@@ -71,8 +71,7 @@ function initServerPort (chromePort, isExternal) {
 
   try {
     options = JSON.parse(chromePort.name)
-  }
-  catch (e) {
+  } catch (e) {
     return
   }
 

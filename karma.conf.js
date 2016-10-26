@@ -1,11 +1,10 @@
-var path = require('path'),
-  webpack = require('webpack'),
-  c = require('./webpack.config.js')
+var path = require('path')
+var c = require('./webpack.config.js')
 
 c.entry = {} // 清空 entry
 c.devtool = '#inline-source-map'
 
-var testSource = require('path').resolve('./libs/')
+var testSource = path.resolve('./libs/')
 var babelLoaderConfig = c.module.loaders.shift()
 
 // 必须告诉 isparta 我使用了哪些 babel 设置，见 https://github.com/deepsweet/isparta-loader/issues/10
