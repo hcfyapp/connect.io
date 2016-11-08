@@ -3,7 +3,7 @@
 [![Build Status](https://img.shields.io/travis/Selection-Translator/connect.io/master.svg?style=flat-square)](https://travis-ci.org/Selection-Translator/connect.io)
 [![Coverage Status](https://img.shields.io/coveralls/Selection-Translator/connect.io/master.svg?style=flat-square)](https://coveralls.io/github/Selection-Translator/connect.io?branch=master)
 [![dependencies Status](https://img.shields.io/david/Selection-Translator/connect.io.svg?style=flat-square)](https://david-dm.org/Selection-Translator/connect.io)
-[![devDependencies Status](https://img.shields.io/david/dev/Selection-Translator/connect.io.svg?style=flat-square)](https://david-dm.org/Selection-Translator/connect.io#info=devDependencies)
+[![devDependencies Status](https://img.shields.io/david/dev/Selection-Translator/connect.io.svg?style=flat-square)](https://david-dm.org/Selection-Translator/connect.io?type=dev)
 [![NPM Version](https://img.shields.io/npm/v/connect.io.svg?style=flat-square)](https://www.npmjs.com/package/connect.io)
 
 Real-time bidirectional event-based and Promise friendly communication in Chrome extensions/apps inspired by [Socket.IO](http://socket.io/).
