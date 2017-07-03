@@ -1,5 +1,5 @@
-var Port = require('../../libs/port')
-var noop = require('../../libs/utils/noop')
+import Port from '../../libs/port'
+import noop from '../../libs/utils/noop'
 
 describe('端口对象', function () {
   describe('在收到远程端口发送过来的消息时', function () {

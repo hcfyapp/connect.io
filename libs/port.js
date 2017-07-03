@@ -1,117 +1,110 @@
-var TinyEmitter = require('tiny-emitter')
-var uuid = require('./utils/uuid')
-var noop = require('./utils/noop')
+import TinyEmitter from 'tiny-emitter'
 
-module.exports = Port
+import uuid from './utils/uuid'
+import noop from './utils/noop'
 
-/**
- * 对 chrome 的 Port 类型的包装
- * @param {chrome.runtime.Port} port
- */
-function Port (port) {
-  TinyEmitter.call(this)
-  this.disconnected = false
+export default class extends TinyEmitter {
+  constructor (port) {
+    super()
+    this.disconnected = false
 
-  /**
-   * 一个 hash map，键是消息的 uuid，值是一个函数，用于保存那些待响应的函数
-   * @type {{}}
-   */
-  var waitingResponseMsg = this._waiting = {}
-  this.port = port
-
-  var that = this
-  port.onMessage.addListener(function (msg) {
-    var id = msg.id
-
-    // 如果在字典里找到了对应 id 的回调函数，那么说明这个消息是由本地端口发送的并有回调函数，
-    // 否则说明这个消息是由远程端口发送的，要把 id 传回去，让远程端口定位到它的回调函数；此时这个消息是没有 name 的
-    var cb = waitingResponseMsg[id]
-    if (cb) {
-      delete waitingResponseMsg[id]
-      cb(msg.error, msg.response)
-    } else {
-      if (id) {
-        new Promise(function (resolve, reject) {
-          that.emit(msg.name, msg.data, resolve, reject)
-        }).then(
-          function (response) { port.postMessage({ id: id, response: response }) },
-          function (error) { port.postMessage({ id: id, error: error }) }
-        )
-      } else {
-        that.emit(msg.name, msg.data, noop, noop)
-      }
-    }
-  })
-
-  // 进入这个回调说明连接是被远程端口断开的
-  port.onDisconnect.addListener(function () { that.emit('disconnect', true) })
-
-  this.once('disconnect',
     /**
-     * 当连接断开时，告诉所有等待响应的消息一个错误
-     * @param {Boolean} isByOtherSide - 连接是否是被另一端断开的
+     * 一个 hash map，键是消息的 uuid，值是一个函数，用于保存那些待响应的函数
+     * @type {{}}
      */
-    function (isByOtherSide) {
-      var error = new Error('Connection has been disconnected by ' + (isByOtherSide ? 'the other side' : 'yourself') + '.')
-      that.disconnected = true
-      that.disconnect = noop
-      that.send = function () {
-        throw error
-      }
-      for (var key in waitingResponseMsg) {
-        waitingResponseMsg[key](error)
-        delete waitingResponseMsg[key]
-      }
-    })
-}
+    const waitingResponseMsg = this._waiting = {}
+    this.port = port
 
-var pp = Port.prototype = Object.create(TinyEmitter.prototype)
+    port.onMessage.addListener(msg => {
+      const { id } = msg
 
-/**
- * 发送消息到另一端
- * @param {String} name - 消息名称
- * @param {*} [data] 数据
- * @param {Boolean} [needResponse] - 如果是 true，则此方法返回一个 Promise，当得到相应时会被 resolve 或 reject。
- *
- * @example
- * send('name', 'data', true)
- * send('name', true) - 这种情况下，data 为 undefined，needResponse 为 true
- * send('name', 'data')
- * send('name')
- */
-pp.send = function (name, data, needResponse) {
-  if (data === true && arguments.length === 2) {
-    data = undefined
-    needResponse = true
-  }
-  var msg = {
-    name: name,
-    data: data
-  }
-  var p
-  if (needResponse) {
-    var that = this
-    p = new Promise(function (resolve, reject) {
-      that._waiting[msg.id = uuid()] = function (error, response) {
-        if (error) {
-          reject(error)
+      // 如果在字典里找到了对应 id 的回调函数，那么说明这个消息是由本地端口发送的并有回调函数，
+      // 否则说明这个消息是由远程端口发送的，要把 id 传回去，让远程端口定位到它的回调函数；此时这个消息是没有 name 的
+      const cb = waitingResponseMsg[id]
+      if (cb) {
+        delete waitingResponseMsg[id]
+        cb(msg.error, msg.response)
+      } else {
+        if (id) {
+          new Promise((resolve, reject) => {
+            this.emit(msg.name, msg.data, resolve, reject)
+          }).then(
+            response => { port.postMessage({ id, response }) },
+            error => { port.postMessage({ id, error }) }
+          )
         } else {
-          resolve(response)
+          this.emit(msg.name, msg.data, noop, noop)
         }
       }
     })
-  }
-  this.port.postMessage(msg)
-  return p
-}
 
-/**
- * 主动断开与远程端口的连接，
- * 此时不会触发 port.onDisconnect 事件。
- */
-pp.disconnect = function () {
-  this.port.disconnect()
-  this.emit('disconnect', false)
+    // 进入这个回调说明连接是被远程端口断开的
+    port.onDisconnect.addListener(() => { this.emit('disconnect', true) })
+
+    this.once('disconnect',
+      /**
+       * 当连接断开时，告诉所有等待响应的消息一个错误
+       * @param {Boolean} isByOtherSide - 连接是否是被另一端断开的
+       */
+      isByOtherSide => {
+        const error = new Error('Connection has been disconnected by ' + (isByOtherSide ? 'the other side' : 'yourself') + '.')
+        this.disconnected = true
+        this.disconnect = noop
+        this.send = function () {
+          throw error
+        }
+        for (let key in waitingResponseMsg) {
+          waitingResponseMsg[key](error)
+          delete waitingResponseMsg[key]
+        }
+      })
+  }
+
+  /**
+   * 发送消息到另一端
+   * @param {String} name - 消息名称
+   * @param {*} [data] 数据
+   * @param {Boolean} [needResponse] - 如果是 true，则此方法返回一个 Promise，当得到相应时会被 resolve 或 reject。
+   *
+   * @example
+   * send('name', 'data', true)
+   * send('name', true) - 这种情况下，data 为 undefined，needResponse 为 true
+   * send('name', 'data')
+   * send('name')
+   */
+  send (name, data, needResponse) {
+    if (data === true && arguments.length === 2) {
+      data = undefined
+      needResponse = true
+    }
+    const msg = {
+      name: name,
+      data: data
+    }
+    let p
+    if (needResponse) {
+      p = new Promise((resolve, reject) => {
+        this._waiting[msg.id = uuid()] = function (error, response) {
+          if (error) {
+            reject(error)
+          } else {
+            resolve(response)
+          }
+        }
+      })
+    }
+    this.port.postMessage(msg)
+    return p
+  }
+
+  /**
+   * 主动断开与远程端口的连接，
+   * 此时不会触发 port.onDisconnect 事件。
+   */
+  disconnect () {
+    this.port.disconnect()
+    this.emit('disconnect', false)
+  }
 }
 
 /**

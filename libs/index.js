@@ -1,5 +1,9 @@
-module.exports = {
-  createClient: require('./client'),
-  createServer: require('./server'),
-  send: require('./send')
+import createClient from './client'
+import createServer from './server'
+import send from './send'
+
+export {
+  createClient,
+  createServer,
+  send
 }

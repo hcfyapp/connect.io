@@ -1,4 +1,4 @@
-var uuid = require('../../libs/utils/uuid')
+import uuid from '../../libs/utils/uuid'
 
 describe('uuid 函数', function () {
   it('返回一个 string', function () {

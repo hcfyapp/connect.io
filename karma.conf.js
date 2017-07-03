@@ -1,29 +1,32 @@
-var path = require('path')
-var c = require('./webpack.config.js')
-
-c.entry = {} // 清空 entry
-c.devtool = '#inline-source-map'
-
-c.module = {
-  preLoaders: [
-    {
-      test: /\.js$/,
-      include: path.resolve('./libs/'),
-      loader: 'istanbul-instrumenter-loader'
-    }
-  ]
-}
-
 module.exports = function (config) {
-  config.set({
+  const c = {
     basePath: '',
     frameworks: ['jasmine'],
-    files: ['tests/index.js'],
+    files: [
+      'node_modules/es6-promise/dist/es6-promise.js',
+      'node_modules/tiny-emitter/dist/tinyemitter.js',
+      'node_modules/chrome-env/dist/chrome.js',
+      'tests/index.js'
+    ],
     preprocessors: {
-      'tests/index.js': ['webpack', 'sourcemap']
+      'tests/index.js': ['rollup']
     },
-    webpack: c,
     reporters: ['progress', 'coverage'],
+    rollupPreprocessor: {
+      plugins: [
+        require('rollup-plugin-istanbul')({
+          exclude: ['tests/**/*.js']
+        }),
+        require('rollup-plugin-buble')()
+      ],
+      external: ['tiny-emitter', 'chrome-env'],
+      globals: {
+        'tiny-emitter': 'TinyEmitter'
+      },
+      format: 'iife',
+      moduleName: 'chromeConnect',
+      sourceMap: 'inline'
+    },
     coverageReporter: {
       dir: 'coverage',
       reporters: [
@@ -45,5 +48,12 @@ module.exports = function (config) {
     autoWatch: false,
     browsers: ['Chrome', 'PhantomJS'],
     singleRun: true
-  })
+  }
+
+  if (process.env.TRAVIS) {
+    c.reporters.push('coveralls')
+    c.browsers = ['PhantomJS']
+  }
+
+  config.set(c)
 }

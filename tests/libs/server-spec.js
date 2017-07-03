@@ -1,5 +1,5 @@
-var Port = require('../../libs/port')
-var createServer = require('../../libs/server')
+import Port from '../../libs/port'
+import createServer from '../../libs/server'
 
 var ChromePort = chrome.__types.Port
 

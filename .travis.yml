@@ -3,17 +3,11 @@ language: node_js
 node_js:
   - "node"
 
-before_install:
-  # 删除镜像地址
-  - rm -f .npmrc
-  - npm install -g npm
-
-before_script:
-  - npm install karma-cli -g
+cache: yarn
 
 script:
-  - npm run lint
-  - karma start --single-run --browsers PhantomJS --reporters progress,coverage,coveralls
+  - yarn run lint
+  - yarn test
 
 notifications:
   email: false

@@ -1,8 +1,7 @@
-var Port = require('./port')
-var runtime = require('./utils/chrome-runtime')
-var id = runtime.id
+import Port from './port'
+import runtime from './utils/chrome-runtime'
 
-module.exports = createClient
+const { id } = runtime
 
 /**
  * 客户端
@@ -13,7 +12,7 @@ module.exports = createClient
  * @see https://developer.chrome.com/extensions/runtime#method-connect
  * @see https://developer.chrome.com/extensions/tabs#method-connect
  */
-function createClient (eIdOrTabId, options) {
+export default function (eIdOrTabId, options) {
   // createClient(options)
   if (typeof eIdOrTabId === 'object') {
     options = eIdOrTabId
@@ -26,14 +25,14 @@ function createClient (eIdOrTabId, options) {
   }
   if (eIdOrTabId == null) eIdOrTabId = id
 
-  var portNamespace = options.namespace || 'default'
+  const portNamespace = options.namespace || 'default'
 
   // 把参数放在 name 里传到服务端
-  var params = JSON.stringify({
+  const params = JSON.stringify({
     _namespace: portNamespace
   })
 
-  var chromePort
+  let chromePort
   switch (typeof eIdOrTabId) {
     case 'string': // 扩展 id 是字符串
       chromePort = runtime.connect(eIdOrTabId, { name: params })
@@ -50,7 +49,7 @@ function createClient (eIdOrTabId, options) {
       throw new Error('chrome.runtime.id is undefined, please specify the extension id which you want to connect.')
   }
 
-  var port = new Port(chromePort)
+  const port = new Port(chromePort)
   port.namespace = portNamespace
   return port
 }

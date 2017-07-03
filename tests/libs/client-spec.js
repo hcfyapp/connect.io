@@ -1,5 +1,5 @@
-var createClient = require('../../libs/client')
-var noop = require('../../libs/utils/noop')
+import createClient from '../../libs/client'
+import noop from '../../libs/utils/noop'
 
 describe('Client 构造函数', function () {
   beforeEach(function () {

@@ -1,5 +1,5 @@
-var id = 0
+let id = 0
 
-module.exports = function () {
+export default function () {
   return String(id++)
 }

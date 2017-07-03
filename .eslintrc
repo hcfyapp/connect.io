@@ -1,13 +1,21 @@
 {
   "globals": {
-    "chrome": false
+    "chrome": false,
+    "ES6Promise": false
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
   },
   "env": {
-    "browser": true,
-    "amd": true,
+    "node": true,
     "jasmine": true
   },
   "extends": [
     "standard"
-  ]
+  ],
+  "rules": {
+    "standard/no-callback-literal": 0,
+    "prefer-promise-reject-errors": 0
+  }
 }

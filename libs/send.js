@@ -1,6 +1,4 @@
-var createClient = require('./client')
-
-module.exports = send
+import createClient from './client'
 
 /**
  * 发送一次性消息
@@ -16,16 +14,16 @@ module.exports = send
  *
  * @return {Promise|undefined}
  */
-function send (options) {
-  var client = createClient(options.id, { frameId: options.frameId, namespace: options.namespace })
-  var promise = client.send(options.name, options.data, options.needResponse)
+export default function (options) {
+  const client = createClient(options.id, { frameId: options.frameId, namespace: options.namespace })
+  const promise = client.send(options.name, options.data, options.needResponse)
   if (promise) {
     return promise.then(
-      function (response) {
+      response => {
         client.disconnect()
         return response
       },
-      function (error) {
+      error => {
         client.disconnect()
         return Promise.reject(error)
       }

@@ -1,62 +1,59 @@
-var TinyEmitter = require('tiny-emitter')
-var noop = require('./utils/noop')
-var Port = require('./port')
-var runtime = require('./utils/chrome-runtime')
-
-module.exports = createServer
-
-// namespace 到 server 对象的映射表
-var serversMap = {}
-
-function createServer (namespace) {
-  if (!namespace) namespace = 'default'
-  var existServer = serversMap[namespace]
-  if (existServer) return existServer
-  return (serversMap[namespace] = new Server(namespace))
-}
+import TinyEmitter from 'tiny-emitter'
+import noop from './utils/noop'
+import Port from './port'
+import runtime from './utils/chrome-runtime'
 
 // 第一次调用 new Server() 的时候才添加这些事件监听
-var initListener = function () {
+let initListener = function () {
   initListener = noop
-  var onConnect = runtime.onConnect
-  var onConnectExternal = runtime.onConnectExternal
+
+  const { onConnect, onConnectExternal } = runtime
 
   if (onConnect) {
-    onConnect.addListener(function (chromePort) {
+    onConnect.addListener(chromePort => {
       initServerPort(chromePort, false)
     })
   }
 
   if (onConnectExternal) {
-    onConnectExternal.addListener(function (chromePort) {
+    onConnectExternal.addListener(chromePort => {
       initServerPort(chromePort, true)
     })
   }
 }
 
-function Server (namespace) {
-  initListener()
-  TinyEmitter.call(this)
-  this.namespace = namespace
+class Server extends TinyEmitter {
+  constructor (namespace) {
+    super()
+    initListener()
+    this.namespace = namespace
+
+    /**
+     * 连接到此服务端的端口的集合
+     * @type {Port[]}
+     */
+    this.ports = []
+  }
 
   /**
-   * 连接到此服务端的端口的集合
-   * @type {Port[]}
+   * 发送消息到此服务器下的所有客户端
+   * @param {String} name
+   * @param {*} [data]
    */
-  this.ports = []
+  send (name, data) {
+    this.ports.forEach(clientPort => {
+      clientPort.send(name, data)
+    })
+  }
 }
 
-var sp = Server.prototype = Object.create(TinyEmitter.prototype)
+// namespace 到 server 对象的映射表
+const serversMap = {}
 
-/**
- * 发送消息到此服务器下的所有客户端
- * @param {String} name
- * @param {*} [data]
- */
-sp.send = function (name, data) {
-  this.ports.forEach(function (clientPort) {
-    clientPort.send(name, data)
-  })
+export default function (namespace = 'default') {
+  const existServer = serversMap[namespace]
+  if (existServer) return existServer
+  return (serversMap[namespace] = new Server(namespace))
 }
 
 /**
@@ -67,7 +64,7 @@ sp.send = function (name, data) {
 function initServerPort (chromePort, isExternal) {
   // 由 Client 发送过来的客户端一定带有 name，且 name 可转换为 JSON 并有 _namespace 属性。
   // 若没有则说明这个客户端不是 client 发来的
-  var options
+  let options
 
   try {
     options = JSON.parse(chromePort.name)
@@ -75,20 +72,18 @@ function initServerPort (chromePort, isExternal) {
     return
   }
 
-  var _namespace = options._namespace
-  if (!_namespace) {
-    return
-  }
+  const { _namespace } = options
+  if (!_namespace) return
 
   // 如果此 client 尝试连接的服务端没有，则断开连接
-  var server = serversMap[_namespace]
+  const server = serversMap[_namespace]
   if (!server) {
     chromePort.disconnect()
     return
   }
 
   // 将此端口加入到服务端的端口列表中
-  var ports = server.ports
+  const { ports } = server
   const port = new Port(chromePort)
 
   port.external = isExternal
@@ -101,7 +96,7 @@ function initServerPort (chromePort, isExternal) {
    * @param {*} [data]
    */
   port.broadcast = function (name, data) {
-    ports.forEach(function (clientPort) {
+    ports.forEach(clientPort => {
       if (clientPort !== port) {
         clientPort.send(name, data)
       }

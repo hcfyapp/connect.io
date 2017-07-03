@@ -1,6 +1,6 @@
-var Port = require('../../libs/port')
-var send = require('../../libs/send')
-var noop = require('../../libs/utils/noop')
+import Port from '../../libs/port'
+import send from '../../libs/send'
+import noop from '../../libs/utils/noop'
 
 describe('send 方法', function () {
   var mockPort
