@@ -1,6 +1,6 @@
 {
   "name": "connect.io",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Real-time bidirectional event-based and Promise friendly communication in Chrome extensions or Apps inspired by Socket.IO. ",
   "scripts": {
     "test": "karma start",
@@ -19,8 +19,8 @@
     "event-based",
     "promise",
     "bidirectional",
-    "extension",
-    "app"
+    "chrome extension",
+    "chrome app"
   ],
   "files": [
     "dist",
