@@ -1,4 +1,4 @@
-module.exports = function (config) {
+module.exports = function(config) {
   const c = {
     basePath: '',
     frameworks: ['jasmine'],
@@ -24,15 +24,15 @@ module.exports = function (config) {
         'tiny-emitter': 'TinyEmitter'
       },
       format: 'iife',
-      moduleName: 'chromeConnect',
-      sourceMap: 'inline'
+      name: 'chromeConnect',
+      sourcemap: 'inline'
     },
     coverageReporter: {
       dir: 'coverage',
       reporters: [
         {
           type: 'html',
-          subdir (browser) {
+          subdir(browser) {
             return 'html/' + browser.toLowerCase().split(/[ /-]/)[0]
           }
         },
