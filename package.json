@@ -33,6 +33,7 @@
     "chrome-env": "0.1.0",
     "es6-promise": "^4.0.5",
     "eslint": "^4.0.0",
+    "eslint-config-prettier": "^2.6.0",
     "eslint-config-standard": "^10.2.0",
     "eslint-plugin-html": "^3.0.0",
     "eslint-plugin-import": "^2.2.0",

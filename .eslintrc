@@ -11,9 +11,7 @@
     "node": true,
     "jasmine": true
   },
-  "extends": [
-    "standard"
-  ],
+  "extends": ["standard", "prettier"],
   "rules": {
     "standard/no-callback-literal": 0,
     "prefer-promise-reject-errors": 0
