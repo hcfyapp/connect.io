@@ -1,12 +1,12 @@
 {
   "name": "connect.io",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Real-time bidirectional event-based and Promise friendly communication in Chrome extensions or Apps inspired by Socket.IO. ",
   "scripts": {
     "test": "karma start",
     "build": "node build/build.js",
     "lint": "eslint --ignore-pattern '/dist/' --ignore-pattern '/coverage/' '**/*.js'",
-    "prepublish": "yarn run build"
+    "prepublishOnly": "npm run build"
   },
   "main": "dist/chrome-connect.common.js",
   "module": "dist/chrome-connect.esm.js",
@@ -46,11 +46,13 @@
     "karma-coveralls": "^1.1.2",
     "karma-jasmine": "^1.0.2",
     "karma-phantomjs-launcher": "^1.0.2",
-    "karma-rollup-preprocessor": "^4.0.0",
+    "karma-rollup-preprocessor": "^5.0.1",
     "phantomjs-prebuilt": "^2.1.13",
-    "rollup": "^0.43.0",
-    "rollup-plugin-buble": "^0.15.0",
+    "rollup": "^0.50.0",
+    "rollup-plugin-buble": "^0.16.0",
+    "rollup-plugin-commonjs": "^8.2.5",
     "rollup-plugin-istanbul": "^1.1.0",
+    "rollup-plugin-node-resolve": "^3.0.0",
     "uglify-js": "^3.0.23"
   },
   "repository": {
