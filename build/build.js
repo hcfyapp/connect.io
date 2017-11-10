@@ -14,7 +14,8 @@ const uglifyJS = require('uglify-js')
 rollup
   .rollup({
     input: config.input,
-    plugins: [config.tp]
+    plugins: [config.tp],
+    external: ['tinyemitter', 'tslib']
   })
   .then(bundle => {
     // 输出 es 格式
