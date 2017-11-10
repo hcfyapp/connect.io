@@ -4,7 +4,6 @@ node_js:
   - "node"
 
 script:
-  - npm run lint
   - npm test
 
 notifications:
