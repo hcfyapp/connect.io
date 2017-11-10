@@ -1,5 +1,4 @@
 import Port from './port'
-import runtime from './utils/chrome-runtime'
 
 export interface IOptions {
   /** 此客户端所在的命名空间的名称。默认为 'default' */
@@ -10,7 +9,7 @@ export interface IOptions {
 
 export type TExtentionIdOrTabId = string | number
 
-const { id } = runtime
+const { id } = chrome.runtime
 
 /**
  * 客户端
@@ -46,7 +45,7 @@ export default function(
   let chromePort: chrome.runtime.Port
 
   if (typeof eIdOrTabId === 'string') {
-    chromePort = runtime.connect(eIdOrTabId, { name: params })
+    chromePort = chrome.runtime.connect(eIdOrTabId, { name: params })
   } else if (typeof eIdOrTabId === 'number') {
     chromePort = chrome.tabs.connect(eIdOrTabId, {
       frameId: options.frameId,

@@ -1,11 +1,11 @@
 import createClient, { TExtentionIdOrTabId, IOptions } from './client'
 
-interface ISendOptions {
+export interface ISendOptions {
   id?: TExtentionIdOrTabId
-  frameId: IOptions['frameId']
-  namespace: IOptions['namespace']
+  frameId?: IOptions['frameId']
+  namespace?: IOptions['namespace']
   name: string
-  data: any
+  data?: any
   needResponse?: boolean
 }
 

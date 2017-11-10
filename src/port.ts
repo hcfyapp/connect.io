@@ -2,7 +2,7 @@
  * @fileOverview 包装一层 Chrome 的 Port 对象，使用自定义的消息格式
  */
 
-import TinyEmitter = require('tiny-emitter')
+import TinyEmitter from 'tinyemitter'
 import uuid from './utils/uuid'
 import noop from './utils/noop'
 
@@ -91,30 +91,28 @@ export default class Port extends TinyEmitter {
     port.onDisconnect.addListener(() => {
       this.emit('disconnect', true)
     })
-
-    this.once(
-      'disconnect',
-      /**
+    /**
        * 当连接断开时，告诉所有等待响应的消息一个错误
        * @param isByOtherSide - 连接是否是被另一端断开的
        */
-      (isByOtherSide: boolean) => {
-        const error = new Error(
-          `Connection has been disconnected by ${isByOtherSide
-            ? 'the other side'
-            : 'yourself'}.`
-        )
-        this.disconnected = true
-        this.disconnect = noop
-        this.send = function() {
-          throw error
-        }
-        for (let key in waitingResponseMsg) {
-          waitingResponseMsg[key](error)
-          delete waitingResponseMsg[key]
-        }
+    const disconnectHandle = (isByOtherSide: boolean) => {
+      const error = new Error(
+        `Connection has been disconnected by ${isByOtherSide
+          ? 'the other side'
+          : 'yourself'}.`
+      )
+      this.disconnected = true
+      this.disconnect = noop
+      this.send = function() {
+        throw error
       }
-    )
+      for (let key in waitingResponseMsg) {
+        waitingResponseMsg[key](error)
+        delete waitingResponseMsg[key]
+      }
+    }
+
+    this.on('disconnect', disconnectHandle)
   }
 
   /**

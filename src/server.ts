@@ -1,13 +1,12 @@
-import TinyEmitter = require('tiny-emitter')
+import TinyEmitter from 'tinyemitter'
 import noop from './utils/noop'
 import Port from './port'
-import runtime from './utils/chrome-runtime'
 
 // 第一次调用 new Server() 的时候才添加这些事件监听
 let initListener = function() {
   initListener = noop
 
-  const { onConnect, onConnectExternal } = runtime
+  const { onConnect, onConnectExternal } = chrome.runtime
 
   if (onConnect) {
     onConnect.addListener(chromePort => {
@@ -22,7 +21,7 @@ let initListener = function() {
   }
 }
 
-class Server extends TinyEmitter {
+export class Server extends TinyEmitter {
   private namespace: string
   readonly ports: ServerPort[]
 
@@ -47,7 +46,7 @@ class Server extends TinyEmitter {
   }
 }
 
-class ServerPort extends Port {
+export class ServerPort extends Port {
   /** 这个端口所属的服务端 */
   server: Server
   /** 这个端口是否是外部端口 */
@@ -64,9 +63,10 @@ class ServerPort extends Port {
 
     const { ports } = server
     ports.push(this)
-    this.once('disconnect', () => {
+    const disconnectHandle = () => {
       ports.splice(ports.indexOf(this), 1)
-    })
+    }
+    this.on('disconnect', disconnectHandle)
   }
 
   /** 广播消息的方法。消息将会发送到此端口所属服务器下的所有端口，除了发起这个广播的端口本身。 */

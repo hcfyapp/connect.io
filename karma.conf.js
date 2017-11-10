@@ -1,59 +1,47 @@
 module.exports = function(config) {
-  const c = {
+  const options = {
     basePath: '',
-    frameworks: ['jasmine'],
+    frameworks: ['jasmine', 'karma-typescript'],
     files: [
       'node_modules/es6-promise/dist/es6-promise.js',
-      'node_modules/tiny-emitter/dist/tinyemitter.js',
       'node_modules/chrome-env/dist/chrome.js',
-      'tests/index.js'
+      'src/**/*.ts',
+      'tests/**/*.ts'
     ],
     preprocessors: {
-      'tests/index.js': ['rollup']
+      '**/*.ts': ['karma-typescript']
     },
-    reporters: ['progress', 'coverage'],
-    rollupPreprocessor: {
-      plugins: [
-        require('rollup-plugin-istanbul')({
-          exclude: ['tests/**/*.js']
-        }),
-        require('rollup-plugin-buble')()
-      ],
-      external: ['tiny-emitter', 'chrome-env'],
-      globals: {
-        'tiny-emitter': 'TinyEmitter'
+    reporters: ['progress', 'karma-typescript'],
+    karmaTypescriptConfig: {
+      compilerOptions: {
+        declaration: false
       },
-      format: 'iife',
-      name: 'chromeConnect',
-      sourcemap: 'inline'
+      coverageOptions: {
+        exclude: /\.(d|spec|helper)\.ts/i
+      }
     },
-    coverageReporter: {
-      dir: 'coverage',
-      reporters: [
-        {
-          type: 'html',
-          subdir(browser) {
-            return 'html/' + browser.toLowerCase().split(/[ /-]/)[0]
-          }
-        },
-        {
-          type: 'lcov',
-          subdir: 'lcov'
-        }
-      ]
-    },
+    browsers: ['PhantomJS'],
     port: 9876,
     colors: true,
-    logLevel: config.LOG_INFO,
-    autoWatch: false,
-    browsers: ['Chrome', 'PhantomJS'],
-    singleRun: true
+    logLevel: config.LOG_INFO
   }
 
   if (process.env.TRAVIS) {
-    c.reporters.push('coveralls')
-    c.browsers = ['PhantomJS']
+    options.singleRun = true
+    options.autoWatch = false
+    options.reporters.push('dots')
+    options.karmaTypescriptConfig.reports = {
+      lcovonly: {
+        dir: 'coverage',
+        subdirectory: 'lcov'
+      }
+    }
+  } else {
+    options.browsers.push('Chrome', 'Safari')
+    // Safari 有点慢
+    options.captureTimeout = 120000
+    options.browserNoActivityTimeout = 20000
   }
 
-  config.set(c)
+  config.set(options)
 }
