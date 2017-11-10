@@ -12,6 +12,7 @@
   "main": "dist/chrome-connect.common.js",
   "module": "dist/chrome-connect.esm.js",
   "unpkg": "dist/chrome-connect.js",
+  "types": "declaration/index.d.ts",
   "keywords": [
     "chrome",
     "connect",
@@ -23,7 +24,7 @@
     "chrome extension",
     "chrome app"
   ],
-  "files": ["dist", "libs"],
+  "files": ["dist", "libs", "declaration"],
   "dependencies": {
     "@types/chrome": "0.0.52",
     "tinyemitter": "^1.0.1"
