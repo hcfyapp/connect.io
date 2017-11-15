@@ -1,6 +1,6 @@
 {
   "name": "connect.io",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description":
     "Real-time bidirectional event-based and Promise friendly communication in Chrome extensions or Apps inspired by Socket.IO. ",
   "scripts": {
@@ -12,7 +12,7 @@
   "main": "dist/chrome-connect.common.js",
   "module": "dist/chrome-connect.esm.js",
   "unpkg": "dist/chrome-connect.js",
-  "types": "declaration/index.d.ts",
+  "types": "declaration/src/index.d.ts",
   "keywords": [
     "chrome",
     "connect",
@@ -24,7 +24,7 @@
     "chrome extension",
     "chrome app"
   ],
-  "files": ["dist", "libs", "declaration"],
+  "files": ["dist", "src", "declaration/src"],
   "dependencies": {
     "@types/chrome": "0.0.52",
     "tinyemitter": "^1.0.1",
