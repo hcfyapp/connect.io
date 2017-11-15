@@ -34,6 +34,7 @@ export default class Port extends TinyEmitter {
   private disconnected: boolean
   private _waiting: IWatingMap
   private port: chrome.runtime.Port
+  sender?: chrome.runtime.MessageSender
 
   constructor(port: chrome.runtime.Port) {
     super()
@@ -41,6 +42,7 @@ export default class Port extends TinyEmitter {
 
     const waitingResponseMsg = (this._waiting = {} as IWatingMap)
     this.port = port
+    this.sender = port.sender
 
     // @ts-ignore
     port.onMessage.addListener((msg: IRequestMessage | IResponseMessage) => {
