@@ -8,10 +8,10 @@ module.exports = {
   tp: typescript({
     useTsconfigDeclarationDir: true
   }),
-  esOutputPath: path.resolve(__dirname, '../dist/connect.esm.js'),
-  cjsOutputPath: path.resolve(__dirname, '../dist/connect.common.js'),
-  umdOutputPath: path.resolve(__dirname, '../dist/connect.js'),
-  umdMinOutputPath: path.resolve(__dirname, '../dist/connect.min.js'),
+  esOutputPath: path.resolve(__dirname, '../dist/chrome-connect.esm.js'),
+  cjsOutputPath: path.resolve(__dirname, '../dist/chrome-connect.common.js'),
+  umdOutputPath: path.resolve(__dirname, '../dist/chrome-connect.js'),
+  umdMinOutputPath: path.resolve(__dirname, '../dist/chrome-connect.min.js'),
   banner: [
     '/*!',
     ' * chrome-connect v' + pkg.version,
