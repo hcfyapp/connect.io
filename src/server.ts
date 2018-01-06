@@ -21,6 +21,10 @@ let initListener = function() {
   }
 }
 
+export interface EventHandlers {
+  connect: (client: ServerPort) => void
+}
+
 export class Server extends TinyEmitter {
   private namespace: string
   readonly ports: ServerPort[]
@@ -32,6 +36,11 @@ export class Server extends TinyEmitter {
 
     /** 连接到此服务端的端口的集合 */
     this.ports = []
+  }
+
+  // 为了添加更准确的类型注释需要覆盖一下 on 方法
+  on<T extends keyof EventHandlers>(name: T, handle: EventHandlers[T]) {
+    super.on(name, handle)
   }
 
   /**
